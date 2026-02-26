@@ -150,6 +150,17 @@ const FEATURE_PAYLOADS: Record<FeatureRoute, MockFeaturePayload> = {
     ],
     timeline: buildFeatureTimeline("routing", "case")
   },
+  "/customer-profile-depth": {
+    featureRoute: "/customer-profile-depth",
+    featureName: "customer-profile-depth",
+    ownershipPod: "pod-customer-intelligence",
+    kpis: [
+      { label: "Profiles hydrated/day", value: "1,932" },
+      { label: "Avg context load", value: "168ms" },
+      { label: "Cross-channel joins", value: "98.8%" }
+    ],
+    timeline: buildFeatureTimeline("profile", "case")
+  },
   "/case-editor": {
     featureRoute: "/case-editor",
     featureName: "case-editor",

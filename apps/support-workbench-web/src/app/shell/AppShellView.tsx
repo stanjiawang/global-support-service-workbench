@@ -8,6 +8,7 @@ import { loadAgentPresenceSnapshot } from "@features/agent-presence/agentPresenc
 import { discardDraftChanges, loadCaseDraft } from "@features/case-editor/caseEditorSlice";
 import { loadCaseHistorySnapshot } from "@features/case-history/caseHistorySlice";
 import { loadChatSessionSnapshot } from "@features/chat-session/chatSessionSlice";
+import { loadCustomerProfileDepth } from "@features/customer-profile-depth/customerProfileDepthSlice";
 import { loadKnowledgeAssistSnapshot } from "@features/knowledge-assist/knowledgeAssistSlice";
 import { loadPhoneSessionSnapshot } from "@features/phone-session/phoneSessionSlice";
 import { loadTicketDetail, loadTicketDirectory } from "@features/ticket-detail/ticketDetailSlice";
@@ -19,6 +20,11 @@ import "./app-shell.css";
 
 const Customer360Panel = lazy(() =>
   import("@features/customer-360/Customer360Panel").then((module) => ({ default: module.Customer360Panel }))
+);
+const CustomerProfileDepthPanel = lazy(() =>
+  import("@features/customer-profile-depth/CustomerProfileDepthPanel").then((module) => ({
+    default: module.CustomerProfileDepthPanel
+  }))
 );
 const AssignmentRoutingPanel = lazy(() =>
   import("@features/assignment-routing/AssignmentRoutingPanel").then((module) => ({ default: module.AssignmentRoutingPanel }))
@@ -102,6 +108,12 @@ export function AppShellView(): JSX.Element {
 
     if (activeRoute === "/assignment-routing") {
       pendingRequestsRef.current = [dispatch(loadRoutingSnapshot())];
+      emitLoaded();
+      return;
+    }
+
+    if (activeRoute === "/customer-profile-depth") {
+      pendingRequestsRef.current = [dispatch(loadCustomerProfileDepth())];
       emitLoaded();
       return;
     }
@@ -219,6 +231,8 @@ export function AppShellView(): JSX.Element {
 
             {activeRoute === "/assignment-routing" ? <AssignmentRoutingPanel /> : null}
 
+            {activeRoute === "/customer-profile-depth" ? <CustomerProfileDepthPanel /> : null}
+
             {activeRoute === "/case-history" ? (
               <CaseHistoryPanel onRefresh={() => dispatch(loadCaseHistorySnapshot())} />
             ) : null}
@@ -240,6 +254,7 @@ export function AppShellView(): JSX.Element {
             {activeRoute !== "/customer-360" &&
             activeRoute !== "/chat-session" &&
             activeRoute !== "/assignment-routing" &&
+            activeRoute !== "/customer-profile-depth" &&
             activeRoute !== "/case-history" &&
             activeRoute !== "/case-editor" &&
             activeRoute !== "/phone-session" &&
