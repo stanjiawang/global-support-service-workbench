@@ -172,6 +172,17 @@ const FEATURE_PAYLOADS: Record<FeatureRoute, MockFeaturePayload> = {
     ],
     timeline: buildFeatureTimeline("comms", "chat")
   },
+  "/workflow-automation": {
+    featureRoute: "/workflow-automation",
+    featureName: "workflow-automation",
+    ownershipPod: "pod-case-lifecycle",
+    kpis: [
+      { label: "Automation runs/day", value: "6,412" },
+      { label: "Macro success rate", value: "97.6%" },
+      { label: "Escalation policy hits", value: "238" }
+    ],
+    timeline: buildFeatureTimeline("auto", "case")
+  },
   "/case-editor": {
     featureRoute: "/case-editor",
     featureName: "case-editor",

@@ -15,6 +15,7 @@ import { loadPhoneSessionSnapshot } from "@features/phone-session/phoneSessionSl
 import { loadTicketDetail, loadTicketDirectory } from "@features/ticket-detail/ticketDetailSlice";
 import { loadTicketSearchIndex } from "@features/ticket-search/ticketSearchSlice";
 import { loadTicketWorkspaceIndex } from "@features/ticket-workspace/ticketWorkspaceSlice";
+import { loadWorkflowAutomation } from "@features/workflow-automation/workflowAutomationSlice";
 import { ROUTE_DESCRIPTORS, type FeatureRoute } from "@app/routing/routes";
 import { routeFromHash } from "@app/routing/routeState";
 import "./app-shell.css";
@@ -30,6 +31,11 @@ const CustomerProfileDepthPanel = lazy(() =>
 const CommunicationLoggingPanel = lazy(() =>
   import("@features/communication-logging/CommunicationLoggingPanel").then((module) => ({
     default: module.CommunicationLoggingPanel
+  }))
+);
+const WorkflowAutomationPanel = lazy(() =>
+  import("@features/workflow-automation/WorkflowAutomationPanel").then((module) => ({
+    default: module.WorkflowAutomationPanel
   }))
 );
 const AssignmentRoutingPanel = lazy(() =>
@@ -126,6 +132,12 @@ export function AppShellView(): JSX.Element {
 
     if (activeRoute === "/communication-logging") {
       pendingRequestsRef.current = [dispatch(loadCommunicationSnapshot())];
+      emitLoaded();
+      return;
+    }
+
+    if (activeRoute === "/workflow-automation") {
+      pendingRequestsRef.current = [dispatch(loadWorkflowAutomation())];
       emitLoaded();
       return;
     }
@@ -247,6 +259,8 @@ export function AppShellView(): JSX.Element {
 
             {activeRoute === "/communication-logging" ? <CommunicationLoggingPanel /> : null}
 
+            {activeRoute === "/workflow-automation" ? <WorkflowAutomationPanel /> : null}
+
             {activeRoute === "/case-history" ? (
               <CaseHistoryPanel onRefresh={() => dispatch(loadCaseHistorySnapshot())} />
             ) : null}
@@ -270,6 +284,7 @@ export function AppShellView(): JSX.Element {
             activeRoute !== "/assignment-routing" &&
             activeRoute !== "/customer-profile-depth" &&
             activeRoute !== "/communication-logging" &&
+            activeRoute !== "/workflow-automation" &&
             activeRoute !== "/case-history" &&
             activeRoute !== "/case-editor" &&
             activeRoute !== "/phone-session" &&
