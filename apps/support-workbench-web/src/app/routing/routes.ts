@@ -4,6 +4,7 @@ export type FeatureRoute =
   | "/phone-session"
   | "/case-history"
   | "/case-editor"
+  | "/ticket-search"
   | "/knowledge-assist"
   | "/agent-presence";
 
@@ -19,6 +20,7 @@ export const ROUTE_DESCRIPTORS: readonly RouteDescriptor[] = [
   { path: "/phone-session", feature: "phone-session", ownershipPod: "pod-voice-support" },
   { path: "/case-history", feature: "case-history", ownershipPod: "pod-case-lifecycle" },
   { path: "/case-editor", feature: "case-editor", ownershipPod: "pod-case-lifecycle" },
+  { path: "/ticket-search", feature: "ticket-search", ownershipPod: "pod-case-lifecycle" },
   { path: "/knowledge-assist", feature: "knowledge-assist", ownershipPod: "pod-agent-assist" },
   { path: "/agent-presence", feature: "agent-presence", ownershipPod: "pod-workforce-ops" }
 ];

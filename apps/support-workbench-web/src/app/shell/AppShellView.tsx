@@ -9,6 +9,7 @@ import { loadCaseHistorySnapshot } from "@features/case-history/caseHistorySlice
 import { loadChatSessionSnapshot } from "@features/chat-session/chatSessionSlice";
 import { loadKnowledgeAssistSnapshot } from "@features/knowledge-assist/knowledgeAssistSlice";
 import { loadPhoneSessionSnapshot } from "@features/phone-session/phoneSessionSlice";
+import { loadTicketSearchIndex } from "@features/ticket-search/ticketSearchSlice";
 import { ROUTE_DESCRIPTORS, type FeatureRoute } from "@app/routing/routes";
 import { routeFromHash } from "@app/routing/routeState";
 import "./app-shell.css";
@@ -30,6 +31,9 @@ const PhoneSessionPanel = lazy(() =>
 );
 const KnowledgeAssistPanel = lazy(() =>
   import("@features/knowledge-assist/KnowledgeAssistPanel").then((module) => ({ default: module.KnowledgeAssistPanel }))
+);
+const TicketSearchPanel = lazy(() =>
+  import("@features/ticket-search/TicketSearchPanel").then((module) => ({ default: module.TicketSearchPanel }))
 );
 const AgentPresencePanel = lazy(() =>
   import("@features/agent-presence/AgentPresencePanel").then((module) => ({ default: module.AgentPresencePanel }))
@@ -104,6 +108,12 @@ export function AppShellView(): JSX.Element {
 
     if (activeRoute === "/knowledge-assist") {
       pendingRequestsRef.current = [dispatch(loadKnowledgeAssistSnapshot())];
+      emitLoaded();
+      return;
+    }
+
+    if (activeRoute === "/ticket-search") {
+      pendingRequestsRef.current = [dispatch(loadTicketSearchIndex())];
       emitLoaded();
       return;
     }
@@ -187,6 +197,8 @@ export function AppShellView(): JSX.Element {
 
             {activeRoute === "/knowledge-assist" ? <KnowledgeAssistPanel /> : null}
 
+            {activeRoute === "/ticket-search" ? <TicketSearchPanel /> : null}
+
             {activeRoute === "/agent-presence" ? <AgentPresencePanel /> : null}
 
             {activeRoute !== "/customer-360" &&
@@ -195,6 +207,7 @@ export function AppShellView(): JSX.Element {
             activeRoute !== "/case-editor" &&
             activeRoute !== "/phone-session" &&
             activeRoute !== "/knowledge-assist" &&
+            activeRoute !== "/ticket-search" &&
             activeRoute !== "/agent-presence" ? (
               <FeaturePanel
                 route={activeRoute}
