@@ -5,6 +5,7 @@ import { agentPresenceReducer } from "@features/agent-presence/agentPresenceSlic
 import { caseEditorReducer } from "@features/case-editor/caseEditorSlice";
 import { caseHistoryReducer } from "@features/case-history/caseHistorySlice";
 import { chatSessionReducer } from "@features/chat-session/chatSessionSlice";
+import { communicationLoggingReducer } from "@features/communication-logging/communicationLoggingSlice";
 import { customerProfileDepthReducer } from "@features/customer-profile-depth/customerProfileDepthSlice";
 import { knowledgeAssistReducer } from "@features/knowledge-assist/knowledgeAssistSlice";
 import { phoneSessionReducer } from "@features/phone-session/phoneSessionSlice";
@@ -40,6 +41,7 @@ export function createWorkbenchStore() {
       workbenchUi: workbenchUiSlice.reducer,
       assignmentRouting: assignmentRoutingReducer,
       customerProfileDepth: customerProfileDepthReducer,
+      communicationLogging: communicationLoggingReducer,
       chatSession: chatSessionReducer,
       caseHistory: caseHistoryReducer,
       caseEditor: caseEditorReducer,
