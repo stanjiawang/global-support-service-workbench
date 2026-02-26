@@ -14,6 +14,7 @@ import { handoffReducer } from "@app/providers/handoffSlice";
 import { ticketDetailReducer } from "@features/ticket-detail/ticketDetailSlice";
 import { ticketSearchReducer } from "@features/ticket-search/ticketSearchSlice";
 import { ticketWorkspaceReducer } from "@features/ticket-workspace/ticketWorkspaceSlice";
+import { workflowAutomationReducer } from "@features/workflow-automation/workflowAutomationSlice";
 
 interface WorkbenchUiState {
   readonly activeRoute: FeatureRoute;
@@ -52,7 +53,8 @@ export function createWorkbenchStore() {
       handoff: handoffReducer,
       ticketDetail: ticketDetailReducer,
       ticketSearch: ticketSearchReducer,
-      ticketWorkspace: ticketWorkspaceReducer
+      ticketWorkspace: ticketWorkspaceReducer,
+      workflowAutomation: workflowAutomationReducer
     }
   });
 }
