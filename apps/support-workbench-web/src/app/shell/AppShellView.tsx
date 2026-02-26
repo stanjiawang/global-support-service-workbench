@@ -14,6 +14,7 @@ import { loadKnowledgeAssistSnapshot } from "@features/knowledge-assist/knowledg
 import { loadKnowledgeLinkage } from "@features/knowledge-linkage/knowledgeLinkageSlice";
 import { loadPermissionsRbac } from "@features/permissions-rbac/permissionsRbacSlice";
 import { loadPhoneSessionSnapshot } from "@features/phone-session/phoneSessionSlice";
+import { loadReportingDashboards } from "@features/reporting-dashboards/reportingDashboardsSlice";
 import { loadTicketDetail, loadTicketDirectory } from "@features/ticket-detail/ticketDetailSlice";
 import { loadTicketSearchIndex } from "@features/ticket-search/ticketSearchSlice";
 import { loadTicketWorkspaceIndex } from "@features/ticket-workspace/ticketWorkspaceSlice";
@@ -48,6 +49,11 @@ const PermissionsRbacPanel = lazy(() =>
 const KnowledgeLinkagePanel = lazy(() =>
   import("@features/knowledge-linkage/KnowledgeLinkagePanel").then((module) => ({
     default: module.KnowledgeLinkagePanel
+  }))
+);
+const ReportingDashboardsPanel = lazy(() =>
+  import("@features/reporting-dashboards/ReportingDashboardsPanel").then((module) => ({
+    default: module.ReportingDashboardsPanel
   }))
 );
 const AssignmentRoutingPanel = lazy(() =>
@@ -162,6 +168,12 @@ export function AppShellView(): JSX.Element {
 
     if (activeRoute === "/knowledge-linkage") {
       pendingRequestsRef.current = [dispatch(loadKnowledgeLinkage())];
+      emitLoaded();
+      return;
+    }
+
+    if (activeRoute === "/reporting-dashboards") {
+      pendingRequestsRef.current = [dispatch(loadReportingDashboards())];
       emitLoaded();
       return;
     }
@@ -289,6 +301,8 @@ export function AppShellView(): JSX.Element {
 
             {activeRoute === "/knowledge-linkage" ? <KnowledgeLinkagePanel /> : null}
 
+            {activeRoute === "/reporting-dashboards" ? <ReportingDashboardsPanel /> : null}
+
             {activeRoute === "/case-history" ? (
               <CaseHistoryPanel onRefresh={() => dispatch(loadCaseHistorySnapshot())} />
             ) : null}
@@ -315,6 +329,7 @@ export function AppShellView(): JSX.Element {
             activeRoute !== "/workflow-automation" &&
             activeRoute !== "/permissions-rbac" &&
             activeRoute !== "/knowledge-linkage" &&
+            activeRoute !== "/reporting-dashboards" &&
             activeRoute !== "/case-history" &&
             activeRoute !== "/case-editor" &&
             activeRoute !== "/phone-session" &&
