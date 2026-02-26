@@ -194,6 +194,17 @@ const FEATURE_PAYLOADS: Record<FeatureRoute, MockFeaturePayload> = {
     ],
     timeline: buildFeatureTimeline("rbac", "case")
   },
+  "/knowledge-linkage": {
+    featureRoute: "/knowledge-linkage",
+    featureName: "knowledge-linkage",
+    ownershipPod: "pod-agent-assist",
+    kpis: [
+      { label: "Article attach rate", value: "61%" },
+      { label: "Deflection success", value: "74%" },
+      { label: "Feedback processed/day", value: "429" }
+    ],
+    timeline: buildFeatureTimeline("knowledge", "chat")
+  },
   "/case-editor": {
     featureRoute: "/case-editor",
     featureName: "case-editor",
