@@ -139,6 +139,17 @@ const FEATURE_PAYLOADS: Record<FeatureRoute, MockFeaturePayload> = {
     ],
     timeline: buildFeatureTimeline("workspace", "case")
   },
+  "/assignment-routing": {
+    featureRoute: "/assignment-routing",
+    featureName: "assignment-routing",
+    ownershipPod: "pod-case-lifecycle",
+    kpis: [
+      { label: "Queue auto-routes/day", value: "214" },
+      { label: "Manual transfers/day", value: "143" },
+      { label: "Routing accuracy", value: "96.1%" }
+    ],
+    timeline: buildFeatureTimeline("routing", "case")
+  },
   "/case-editor": {
     featureRoute: "/case-editor",
     featureName: "case-editor",

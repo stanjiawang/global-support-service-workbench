@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@app/providers/store";
 import { setActiveRoute } from "@app/providers/store";
 import { emitTelemetry } from "@shared/telemetry/emitTelemetry";
+import { loadRoutingSnapshot } from "@features/assignment-routing/assignmentRoutingSlice";
 import { loadAgentPresenceSnapshot } from "@features/agent-presence/agentPresenceSlice";
 import { discardDraftChanges, loadCaseDraft } from "@features/case-editor/caseEditorSlice";
 import { loadCaseHistorySnapshot } from "@features/case-history/caseHistorySlice";
@@ -18,6 +19,9 @@ import "./app-shell.css";
 
 const Customer360Panel = lazy(() =>
   import("@features/customer-360/Customer360Panel").then((module) => ({ default: module.Customer360Panel }))
+);
+const AssignmentRoutingPanel = lazy(() =>
+  import("@features/assignment-routing/AssignmentRoutingPanel").then((module) => ({ default: module.AssignmentRoutingPanel }))
 );
 const ChatSessionPanel = lazy(() =>
   import("@features/chat-session/ChatSessionPanel").then((module) => ({ default: module.ChatSessionPanel }))
@@ -92,6 +96,12 @@ export function AppShellView(): JSX.Element {
 
     if (activeRoute === "/chat-session") {
       pendingRequestsRef.current = [dispatch(loadChatSessionSnapshot())];
+      emitLoaded();
+      return;
+    }
+
+    if (activeRoute === "/assignment-routing") {
+      pendingRequestsRef.current = [dispatch(loadRoutingSnapshot())];
       emitLoaded();
       return;
     }
@@ -207,6 +217,8 @@ export function AppShellView(): JSX.Element {
               <ChatSessionPanel onRefresh={() => dispatch(loadChatSessionSnapshot())} />
             ) : null}
 
+            {activeRoute === "/assignment-routing" ? <AssignmentRoutingPanel /> : null}
+
             {activeRoute === "/case-history" ? (
               <CaseHistoryPanel onRefresh={() => dispatch(loadCaseHistorySnapshot())} />
             ) : null}
@@ -227,6 +239,7 @@ export function AppShellView(): JSX.Element {
 
             {activeRoute !== "/customer-360" &&
             activeRoute !== "/chat-session" &&
+            activeRoute !== "/assignment-routing" &&
             activeRoute !== "/case-history" &&
             activeRoute !== "/case-editor" &&
             activeRoute !== "/phone-session" &&
