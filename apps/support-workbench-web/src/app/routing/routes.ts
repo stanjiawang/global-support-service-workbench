@@ -9,6 +9,7 @@ export type FeatureRoute =
   | "/ticket-workspace"
   | "/assignment-routing"
   | "/customer-profile-depth"
+  | "/communication-logging"
   | "/knowledge-assist"
   | "/agent-presence";
 
@@ -29,6 +30,7 @@ export const ROUTE_DESCRIPTORS: readonly RouteDescriptor[] = [
   { path: "/ticket-workspace", feature: "ticket-workspace", ownershipPod: "pod-case-lifecycle" },
   { path: "/assignment-routing", feature: "assignment-routing", ownershipPod: "pod-case-lifecycle" },
   { path: "/customer-profile-depth", feature: "customer-profile-depth", ownershipPod: "pod-customer-intelligence" },
+  { path: "/communication-logging", feature: "communication-logging", ownershipPod: "pod-realtime-chat" },
   { path: "/knowledge-assist", feature: "knowledge-assist", ownershipPod: "pod-agent-assist" },
   { path: "/agent-presence", feature: "agent-presence", ownershipPod: "pod-workforce-ops" }
 ];

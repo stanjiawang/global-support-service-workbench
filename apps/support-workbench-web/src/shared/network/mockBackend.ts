@@ -161,6 +161,17 @@ const FEATURE_PAYLOADS: Record<FeatureRoute, MockFeaturePayload> = {
     ],
     timeline: buildFeatureTimeline("profile", "case")
   },
+  "/communication-logging": {
+    featureRoute: "/communication-logging",
+    featureName: "communication-logging",
+    ownershipPod: "pod-realtime-chat",
+    kpis: [
+      { label: "Thread sync lag", value: "124ms" },
+      { label: "Transcript completeness", value: "99.2%" },
+      { label: "Cross-channel stitched", value: "87%" }
+    ],
+    timeline: buildFeatureTimeline("comms", "chat")
+  },
   "/case-editor": {
     featureRoute: "/case-editor",
     featureName: "case-editor",
