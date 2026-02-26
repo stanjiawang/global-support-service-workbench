@@ -10,6 +10,7 @@ import { telemetryReducer } from "@app/providers/telemetrySlice";
 import { handoffReducer } from "@app/providers/handoffSlice";
 import { ticketDetailReducer } from "@features/ticket-detail/ticketDetailSlice";
 import { ticketSearchReducer } from "@features/ticket-search/ticketSearchSlice";
+import { ticketWorkspaceReducer } from "@features/ticket-workspace/ticketWorkspaceSlice";
 
 interface WorkbenchUiState {
   readonly activeRoute: FeatureRoute;
@@ -44,7 +45,8 @@ export function createWorkbenchStore() {
       telemetry: telemetryReducer,
       handoff: handoffReducer,
       ticketDetail: ticketDetailReducer,
-      ticketSearch: ticketSearchReducer
+      ticketSearch: ticketSearchReducer,
+      ticketWorkspace: ticketWorkspaceReducer
     }
   });
 }

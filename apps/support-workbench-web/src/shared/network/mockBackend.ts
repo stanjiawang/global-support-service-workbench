@@ -128,6 +128,17 @@ const FEATURE_PAYLOADS: Record<FeatureRoute, MockFeaturePayload> = {
     ],
     timeline: buildFeatureTimeline("detail", "case")
   },
+  "/ticket-workspace": {
+    featureRoute: "/ticket-workspace",
+    featureName: "ticket-workspace",
+    ownershipPod: "pod-case-lifecycle",
+    kpis: [
+      { label: "Saved views used/day", value: "412" },
+      { label: "Bulk actions/day", value: "286" },
+      { label: "Workspace latency p95", value: "184ms" }
+    ],
+    timeline: buildFeatureTimeline("workspace", "case")
+  },
   "/case-editor": {
     featureRoute: "/case-editor",
     featureName: "case-editor",
