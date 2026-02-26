@@ -1,6 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch } from "@app/providers/store";
-import { loadCaseDraft, persistCaseDraft, updateDraftField } from "@features/case-editor/caseEditorSlice";
+import {
+  discardDraftChanges,
+  loadCaseDraft,
+  persistCaseDraft,
+  recoverDiscardedDraft,
+  updateDraftField
+} from "@features/case-editor/caseEditorSlice";
 import { selectCaseEditorState } from "@features/case-editor/selectors";
 import { selectActiveHandoff } from "@shared/state/handoffSelectors";
 import { DetailList } from "@shared/ui/DetailList";
@@ -118,6 +124,17 @@ export function CaseEditorPanel(): JSX.Element {
           disabled={editor.status === "saving"}
         >
           {editor.status === "saving" ? "Saving..." : "Save draft"}
+        </button>
+        <button type="button" className="nav-btn" onClick={() => dispatch(discardDraftChanges())} disabled={!editor.isDirty}>
+          Discard unsaved changes
+        </button>
+        <button
+          type="button"
+          className="nav-btn"
+          onClick={() => dispatch(recoverDiscardedDraft())}
+          disabled={!editor.lastDiscardedDraft}
+        >
+          Recover discarded draft
         </button>
         <button type="button" className="nav-btn" onClick={() => dispatch(loadCaseDraft())}>
           Reset from template

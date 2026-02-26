@@ -7,6 +7,8 @@
     "dev": "vite",
     "build": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
+    "test:e2e": "playwright test -c playwright.config.ts",
+    "test:e2e:headed": "playwright test -c playwright.config.ts --headed",
     "lint": "eslint .",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "a11y": "vitest run --config vitest.a11y.config.ts",
@@ -20,6 +22,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@playwright/test": "^1.58.1",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^5.1.4",

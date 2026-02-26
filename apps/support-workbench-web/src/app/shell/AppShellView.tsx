@@ -1,10 +1,10 @@
-import { Suspense, lazy, useEffect, useMemo, useRef } from "react";
+import { Suspense, lazy, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@app/providers/store";
 import { setActiveRoute } from "@app/providers/store";
 import { emitTelemetry } from "@shared/telemetry/emitTelemetry";
 import { loadAgentPresenceSnapshot } from "@features/agent-presence/agentPresenceSlice";
-import { loadCaseDraft } from "@features/case-editor/caseEditorSlice";
+import { discardDraftChanges, loadCaseDraft } from "@features/case-editor/caseEditorSlice";
 import { loadCaseHistorySnapshot } from "@features/case-history/caseHistorySlice";
 import { loadChatSessionSnapshot } from "@features/chat-session/chatSessionSlice";
 import { loadKnowledgeAssistSnapshot } from "@features/knowledge-assist/knowledgeAssistSlice";
@@ -45,8 +45,11 @@ function titleFromRoute(route: FeatureRoute): string {
 export function AppShellView(): JSX.Element {
   const dispatch = useDispatch<AppDispatch>();
   const activeRoute = useSelector((state: RootState) => state.workbenchUi.activeRoute);
+  const isCaseDraftDirty = useSelector((state: RootState) => state.caseEditor.isDirty);
   const pendingRequestsRef = useRef<Array<{ abort: () => void }>>([]);
   const previousRouteRef = useRef<FeatureRoute | null>(null);
+  const [pendingRoute, setPendingRoute] = useState<FeatureRoute | null>(null);
+  const effectivePendingRoute = isCaseDraftDirty ? pendingRoute : null;
 
   useEffect(() => {
     if (previousRouteRef.current !== activeRoute) {
@@ -126,6 +129,12 @@ export function AppShellView(): JSX.Element {
           type="button"
           className={descriptor.path === activeRoute ? "nav-btn nav-btn-active" : "nav-btn"}
           onClick={() => {
+            const blocked = activeRoute === "/case-editor" && isCaseDraftDirty && descriptor.path !== activeRoute;
+            if (blocked) {
+              setPendingRoute(descriptor.path);
+              return;
+            }
+
             dispatch(setActiveRoute(descriptor.path));
             window.location.hash = descriptor.path;
           }}
@@ -134,7 +143,7 @@ export function AppShellView(): JSX.Element {
           {descriptor.feature}
         </button>
       )),
-    [activeRoute, dispatch]
+    [activeRoute, dispatch, isCaseDraftDirty]
   );
 
   return (
@@ -187,17 +196,64 @@ export function AppShellView(): JSX.Element {
             activeRoute !== "/phone-session" &&
             activeRoute !== "/knowledge-assist" &&
             activeRoute !== "/agent-presence" ? (
-              <FeaturePanel route={activeRoute} onRouteRestore={(route) => dispatch(setActiveRoute(route))} />
+              <FeaturePanel
+                route={activeRoute}
+                onRouteRestore={(route) => {
+                  const blocked = activeRoute === "/case-editor" && isCaseDraftDirty && route !== activeRoute;
+                  if (blocked) {
+                    setPendingRoute(route);
+                    return;
+                  }
+
+                  dispatch(setActiveRoute(route));
+                }}
+              />
             ) : null}
           </Suspense>
         </main>
       </div>
       <footer className="shell-footer">
+        {effectivePendingRoute ? (
+          <p>
+            You have unsaved case editor changes.{" "}
+            <button
+              type="button"
+              className="nav-btn"
+              onClick={() => {
+                setPendingRoute(null);
+              }}
+            >
+              Stay on editor
+            </button>{" "}
+            <button
+              type="button"
+              className="nav-btn"
+              onClick={() => {
+                if (!effectivePendingRoute) {
+                  return;
+                }
+
+                dispatch(discardDraftChanges());
+                dispatch(setActiveRoute(effectivePendingRoute));
+                window.location.hash = effectivePendingRoute;
+                setPendingRoute(null);
+              }}
+            >
+              Discard and continue
+            </button>
+          </p>
+        ) : null}
         <button
           type="button"
           className="nav-btn"
           onClick={() => {
             const hashRoute = routeFromHash(window.location.hash);
+            const blocked = activeRoute === "/case-editor" && isCaseDraftDirty && hashRoute !== activeRoute;
+            if (blocked) {
+              setPendingRoute(hashRoute);
+              return;
+            }
+
             dispatch(setActiveRoute(hashRoute));
             emitTelemetry(dispatch, {
               eventName: "route.synced_from_hash",
