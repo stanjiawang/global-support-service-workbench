@@ -11,6 +11,7 @@ import { loadChatSessionSnapshot } from "@features/chat-session/chatSessionSlice
 import { loadCommunicationSnapshot } from "@features/communication-logging/communicationLoggingSlice";
 import { loadCustomerProfileDepth } from "@features/customer-profile-depth/customerProfileDepthSlice";
 import { loadKnowledgeAssistSnapshot } from "@features/knowledge-assist/knowledgeAssistSlice";
+import { loadKnowledgeLinkage } from "@features/knowledge-linkage/knowledgeLinkageSlice";
 import { loadPermissionsRbac } from "@features/permissions-rbac/permissionsRbacSlice";
 import { loadPhoneSessionSnapshot } from "@features/phone-session/phoneSessionSlice";
 import { loadTicketDetail, loadTicketDirectory } from "@features/ticket-detail/ticketDetailSlice";
@@ -42,6 +43,11 @@ const WorkflowAutomationPanel = lazy(() =>
 const PermissionsRbacPanel = lazy(() =>
   import("@features/permissions-rbac/PermissionsRbacPanel").then((module) => ({
     default: module.PermissionsRbacPanel
+  }))
+);
+const KnowledgeLinkagePanel = lazy(() =>
+  import("@features/knowledge-linkage/KnowledgeLinkagePanel").then((module) => ({
+    default: module.KnowledgeLinkagePanel
   }))
 );
 const AssignmentRoutingPanel = lazy(() =>
@@ -150,6 +156,12 @@ export function AppShellView(): JSX.Element {
 
     if (activeRoute === "/permissions-rbac") {
       pendingRequestsRef.current = [dispatch(loadPermissionsRbac())];
+      emitLoaded();
+      return;
+    }
+
+    if (activeRoute === "/knowledge-linkage") {
+      pendingRequestsRef.current = [dispatch(loadKnowledgeLinkage())];
       emitLoaded();
       return;
     }
@@ -275,6 +287,8 @@ export function AppShellView(): JSX.Element {
 
             {activeRoute === "/permissions-rbac" ? <PermissionsRbacPanel /> : null}
 
+            {activeRoute === "/knowledge-linkage" ? <KnowledgeLinkagePanel /> : null}
+
             {activeRoute === "/case-history" ? (
               <CaseHistoryPanel onRefresh={() => dispatch(loadCaseHistorySnapshot())} />
             ) : null}
@@ -300,6 +314,7 @@ export function AppShellView(): JSX.Element {
             activeRoute !== "/communication-logging" &&
             activeRoute !== "/workflow-automation" &&
             activeRoute !== "/permissions-rbac" &&
+            activeRoute !== "/knowledge-linkage" &&
             activeRoute !== "/case-history" &&
             activeRoute !== "/case-editor" &&
             activeRoute !== "/phone-session" &&
