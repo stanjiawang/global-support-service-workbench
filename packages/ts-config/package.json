@@ -1,0 +1,15 @@
+{
+  "name": "@workbench/ts-config",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "src/base.json",
+  "scripts": {
+    "build": "echo 'Not applicable'",
+    "test": "echo 'Not applicable'",
+    "lint": "echo 'Not applicable'",
+    "typecheck": "echo 'Not applicable'",
+    "a11y": "echo 'Not applicable'",
+    "docs:lint": "echo 'Not applicable'"
+  }
+}

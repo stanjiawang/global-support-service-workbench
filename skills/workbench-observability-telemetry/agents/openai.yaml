@@ -1,0 +1,3 @@
+display_name: Workbench Observability Telemetry
+short_description: Enforce telemetry schema safety, privacy redaction, and SLO-linked instrumentation.
+default_prompt: Validate telemetry changes for PII safety, schema consistency, and SLO coverage with explicit risk findings.

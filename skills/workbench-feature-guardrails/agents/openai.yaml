@@ -1,0 +1,3 @@
+display_name: Workbench Feature Guardrails
+short_description: Enforce strict module and ownership boundaries in feature code.
+default_prompt: Validate feature boundary integrity, ownership alignment, and ADR note requirements for this workbench change.

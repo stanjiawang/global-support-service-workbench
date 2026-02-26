@@ -1,0 +1,3 @@
+display_name: Workbench Network Resilience
+short_description: Enforce real-time fallback and graceful low-bandwidth behavior.
+default_prompt: Validate transport fallback, adaptive polling behavior, and degraded-network safeguards for this change.

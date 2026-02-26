@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "jsx": "react-jsx",
+    "types": ["vitest/globals"],
+    "paths": {
+      "@app/*": ["./src/app/*"],
+      "@features/*": ["./src/features/*"],
+      "@shared/*": ["./src/shared/*"],
+      "@platform/*": ["./src/platform/*"],
+      "@contracts/*": ["../../packages/api-contracts/src/*"],
+      "@telemetry-sdk/*": ["../../packages/telemetry-sdk/src/*"]
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "vitest*.ts"]
+}

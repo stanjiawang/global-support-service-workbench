@@ -1,0 +1,287 @@
+:root {
+  color-scheme: light;
+  font-family: "SF Pro Text", "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: linear-gradient(130deg, #f4f7ff 0%, #f9fafb 45%, #eef9f5 100%);
+  color: #0f172a;
+}
+
+.shell-root {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+.shell-header,
+.shell-footer {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #dbe3ef;
+  background: #ffffffcc;
+  backdrop-filter: blur(4px);
+}
+
+.shell-footer {
+  border-bottom: none;
+  border-top: 1px solid #dbe3ef;
+}
+
+.shell-body {
+  display: grid;
+  grid-template-columns: 16rem 1fr;
+  min-height: 0;
+}
+
+.shell-nav {
+  padding: 1rem;
+  border-right: 1px solid #dbe3ef;
+  display: grid;
+  gap: 0.5rem;
+  align-content: start;
+  background: #fff;
+}
+
+.shell-main {
+  padding: 1.5rem;
+}
+
+.nav-btn {
+  border: 1px solid #c9d4e8;
+  border-radius: 0.6rem;
+  padding: 0.55rem 0.75rem;
+  text-align: left;
+  background: #fff;
+  cursor: pointer;
+}
+
+.nav-btn:focus-visible {
+  outline: 2px solid #0f62fe;
+  outline-offset: 2px;
+}
+
+.nav-btn-active {
+  border-color: #0f62fe;
+  background: #edf3ff;
+}
+
+.feature-panel {
+  border: 1px solid #dbe3ef;
+  border-radius: 0.75rem;
+  background: #fff;
+  padding: 1rem;
+}
+
+.feature-meta {
+  margin-top: 0.75rem;
+  display: grid;
+  gap: 0.25rem;
+  color: #334155;
+}
+
+@media (max-width: 960px) {
+  .shell-body {
+    grid-template-columns: 1fr;
+  }
+
+  .shell-nav {
+    border-right: none;
+    border-bottom: 1px solid #dbe3ef;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.detail-list {
+  margin: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.detail-row {
+  display: grid;
+  grid-template-columns: 14rem 1fr;
+  gap: 0.75rem;
+  align-items: baseline;
+}
+
+.detail-key {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.detail-value {
+  margin: 0;
+  color: #334155;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid #dbe3ef;
+  border-radius: 0.5rem;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 40rem;
+}
+
+.data-table th,
+.data-table td {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid #edf2f7;
+  text-align: left;
+  vertical-align: top;
+}
+
+.data-table th {
+  background: #f8fafc;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+@media (max-width: 960px) {
+  .detail-row {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+}
+
+.control-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin: 0.75rem 0 1rem;
+}
+
+@media (max-width: 960px) {
+  .control-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.suggestion-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.suggestion-item {
+  border: 1px solid #dbe3ef;
+  border-radius: 0.6rem;
+  padding: 0.75rem;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.suggestion-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  color: #334155;
+  font-size: 0.92rem;
+  margin-top: 0.35rem;
+}
+
+.suggestion-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.inline-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.mini-btn {
+  border: 1px solid #c9d4e8;
+  background: #fff;
+  border-radius: 0.45rem;
+  padding: 0.2rem 0.45rem;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.mini-btn-active {
+  border-color: #0f62fe;
+  background: #edf3ff;
+}
+
+.status-pill {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 0.15rem 0.55rem;
+  font-size: 0.78rem;
+  text-transform: capitalize;
+}
+
+.status-available {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-busy {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.status-break {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-offline {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.form-grid {
+  display: grid;
+  gap: 0.65rem;
+  margin-bottom: 0.9rem;
+}
+
+.field-label {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.text-input,
+.text-area {
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+  padding: 0.55rem 0.65rem;
+  font: inherit;
+  color: #0f172a;
+  background: #ffffff;
+}
+
+.text-area {
+  min-height: 7rem;
+  resize: vertical;
+}
+
+.text-input:focus-visible,
+.text-area:focus-visible {
+  outline: 2px solid #0f62fe;
+  outline-offset: 2px;
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+}

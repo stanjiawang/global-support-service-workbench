@@ -1,0 +1,3 @@
+display_name: Workbench CI Quality Gates
+short_description: Enforce required CI gates and architecture-documentation evidence.
+default_prompt: Validate this PR/change against required quality gates and list missing merge evidence.

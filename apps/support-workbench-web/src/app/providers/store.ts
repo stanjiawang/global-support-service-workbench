@@ -1,0 +1,51 @@
+import { configureStore, createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import type { FeatureRoute } from "@app/routing/routes";
+import { agentPresenceReducer } from "@features/agent-presence/agentPresenceSlice";
+import { caseEditorReducer } from "@features/case-editor/caseEditorSlice";
+import { caseHistoryReducer } from "@features/case-history/caseHistorySlice";
+import { chatSessionReducer } from "@features/chat-session/chatSessionSlice";
+import { knowledgeAssistReducer } from "@features/knowledge-assist/knowledgeAssistSlice";
+import { phoneSessionReducer } from "@features/phone-session/phoneSessionSlice";
+import { telemetryReducer } from "@app/providers/telemetrySlice";
+import { handoffReducer } from "@app/providers/handoffSlice";
+
+interface WorkbenchUiState {
+  readonly activeRoute: FeatureRoute;
+}
+
+const initialState: WorkbenchUiState = {
+  activeRoute: "/customer-360"
+};
+
+const workbenchUiSlice = createSlice({
+  name: "workbenchUi",
+  initialState,
+  reducers: {
+    setActiveRoute(state, action: PayloadAction<FeatureRoute>) {
+      state.activeRoute = action.payload;
+    }
+  }
+});
+
+export const { setActiveRoute } = workbenchUiSlice.actions;
+
+export function createWorkbenchStore() {
+  return configureStore({
+    reducer: {
+      workbenchUi: workbenchUiSlice.reducer,
+      chatSession: chatSessionReducer,
+      caseHistory: caseHistoryReducer,
+      caseEditor: caseEditorReducer,
+      phoneSession: phoneSessionReducer,
+      knowledgeAssist: knowledgeAssistReducer,
+      agentPresence: agentPresenceReducer,
+      telemetry: telemetryReducer,
+      handoff: handoffReducer
+    }
+  });
+}
+
+export const store = createWorkbenchStore();
+export type WorkbenchStore = ReturnType<typeof createWorkbenchStore>;
+export type RootState = ReturnType<WorkbenchStore["getState"]>;
+export type AppDispatch = WorkbenchStore["dispatch"];
