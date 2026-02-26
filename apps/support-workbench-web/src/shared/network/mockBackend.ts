@@ -183,6 +183,17 @@ const FEATURE_PAYLOADS: Record<FeatureRoute, MockFeaturePayload> = {
     ],
     timeline: buildFeatureTimeline("auto", "case")
   },
+  "/permissions-rbac": {
+    featureRoute: "/permissions-rbac",
+    featureName: "permissions-rbac",
+    ownershipPod: "pod-platform-governance",
+    kpis: [
+      { label: "Role policy checks/day", value: "2,840" },
+      { label: "Field access denials", value: "73" },
+      { label: "Compliance control pass", value: "94%" }
+    ],
+    timeline: buildFeatureTimeline("rbac", "case")
+  },
   "/case-editor": {
     featureRoute: "/case-editor",
     featureName: "case-editor",

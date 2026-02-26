@@ -11,6 +11,7 @@ import { loadChatSessionSnapshot } from "@features/chat-session/chatSessionSlice
 import { loadCommunicationSnapshot } from "@features/communication-logging/communicationLoggingSlice";
 import { loadCustomerProfileDepth } from "@features/customer-profile-depth/customerProfileDepthSlice";
 import { loadKnowledgeAssistSnapshot } from "@features/knowledge-assist/knowledgeAssistSlice";
+import { loadPermissionsRbac } from "@features/permissions-rbac/permissionsRbacSlice";
 import { loadPhoneSessionSnapshot } from "@features/phone-session/phoneSessionSlice";
 import { loadTicketDetail, loadTicketDirectory } from "@features/ticket-detail/ticketDetailSlice";
 import { loadTicketSearchIndex } from "@features/ticket-search/ticketSearchSlice";
@@ -36,6 +37,11 @@ const CommunicationLoggingPanel = lazy(() =>
 const WorkflowAutomationPanel = lazy(() =>
   import("@features/workflow-automation/WorkflowAutomationPanel").then((module) => ({
     default: module.WorkflowAutomationPanel
+  }))
+);
+const PermissionsRbacPanel = lazy(() =>
+  import("@features/permissions-rbac/PermissionsRbacPanel").then((module) => ({
+    default: module.PermissionsRbacPanel
   }))
 );
 const AssignmentRoutingPanel = lazy(() =>
@@ -138,6 +144,12 @@ export function AppShellView(): JSX.Element {
 
     if (activeRoute === "/workflow-automation") {
       pendingRequestsRef.current = [dispatch(loadWorkflowAutomation())];
+      emitLoaded();
+      return;
+    }
+
+    if (activeRoute === "/permissions-rbac") {
+      pendingRequestsRef.current = [dispatch(loadPermissionsRbac())];
       emitLoaded();
       return;
     }
@@ -261,6 +273,8 @@ export function AppShellView(): JSX.Element {
 
             {activeRoute === "/workflow-automation" ? <WorkflowAutomationPanel /> : null}
 
+            {activeRoute === "/permissions-rbac" ? <PermissionsRbacPanel /> : null}
+
             {activeRoute === "/case-history" ? (
               <CaseHistoryPanel onRefresh={() => dispatch(loadCaseHistorySnapshot())} />
             ) : null}
@@ -285,6 +299,7 @@ export function AppShellView(): JSX.Element {
             activeRoute !== "/customer-profile-depth" &&
             activeRoute !== "/communication-logging" &&
             activeRoute !== "/workflow-automation" &&
+            activeRoute !== "/permissions-rbac" &&
             activeRoute !== "/case-history" &&
             activeRoute !== "/case-editor" &&
             activeRoute !== "/phone-session" &&
