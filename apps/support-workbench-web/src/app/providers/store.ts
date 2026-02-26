@@ -8,6 +8,7 @@ import { knowledgeAssistReducer } from "@features/knowledge-assist/knowledgeAssi
 import { phoneSessionReducer } from "@features/phone-session/phoneSessionSlice";
 import { telemetryReducer } from "@app/providers/telemetrySlice";
 import { handoffReducer } from "@app/providers/handoffSlice";
+import { ticketSearchReducer } from "@features/ticket-search/ticketSearchSlice";
 
 interface WorkbenchUiState {
   readonly activeRoute: FeatureRoute;
@@ -40,7 +41,8 @@ export function createWorkbenchStore() {
       knowledgeAssist: knowledgeAssistReducer,
       agentPresence: agentPresenceReducer,
       telemetry: telemetryReducer,
-      handoff: handoffReducer
+      handoff: handoffReducer,
+      ticketSearch: ticketSearchReducer
     }
   });
 }
