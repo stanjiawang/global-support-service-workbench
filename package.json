@@ -1,0 +1,16 @@
+{
+  "name": "global-support-service-workbench",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Global Support & Service Workbench monorepo scaffold",
+  "packageManager": "pnpm@10.6.0",
+  "scripts": {
+    "dev": "pnpm --filter @apps/support-workbench-web run dev",
+    "build": "pnpm -r run build",
+    "test": "pnpm -r run test",
+    "lint": "pnpm -r run lint",
+    "typecheck": "pnpm -r run typecheck",
+    "a11y": "pnpm -r run a11y",
+    "docs:lint": "pnpm -r run docs:lint && bash skills/workbench-ci-quality-gates/scripts/check-owner-map.sh \"$(pwd)\""
+  }
+}

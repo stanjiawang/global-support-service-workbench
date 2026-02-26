@@ -1,0 +1,53 @@
+name: workbench-ci
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: workbench-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  quality-gates:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        gate: [typecheck, lint, test, a11y, docs_lint]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile=false
+      - run: |
+          case "${{ matrix.gate }}" in
+            typecheck) pnpm run typecheck ;;
+            lint) pnpm run lint ;;
+            test) pnpm run test ;;
+            a11y) pnpm run a11y ;;
+            docs_lint) pnpm run docs:lint ;;
+            *) exit 1 ;;
+          esac
+
+  required-gates:
+    name: required-gates
+    runs-on: ubuntu-latest
+    if: always()
+    needs: quality-gates
+    steps:
+      - name: Enforce matrix success
+        run: |
+          if [ "${{ needs.quality-gates.result }}" != "success" ]; then
+            echo "One or more required gates failed."
+            exit 1
+          fi
+          echo "All required gates passed."

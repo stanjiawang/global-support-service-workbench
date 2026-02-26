@@ -1,0 +1,3 @@
+display_name: Workbench RTK Sync Patterns
+short_description: Enforce deterministic RTK patterns for cross-channel state and race handling.
+default_prompt: Audit this change for RTK idempotency, stale-version rejection, request supersession, and canonical entity coverage.

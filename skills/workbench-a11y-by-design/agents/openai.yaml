@@ -1,0 +1,3 @@
+display_name: Workbench A11y by Design
+short_description: Enforce WCAG 2.1 AA rules as coding-time and CI merge gates.
+default_prompt: Review this change for semantic controls, keyboard/focus behavior, ARIA checks, and required a11y gates.
