@@ -117,6 +117,17 @@ const FEATURE_PAYLOADS: Record<FeatureRoute, MockFeaturePayload> = {
     ],
     timeline: buildFeatureTimeline("search", "case")
   },
+  "/ticket-detail": {
+    featureRoute: "/ticket-detail",
+    featureName: "ticket-detail",
+    ownershipPod: "pod-case-lifecycle",
+    kpis: [
+      { label: "Open detail sessions", value: "27" },
+      { label: "Timeline freshness", value: "99.4%" },
+      { label: "Audit events/day", value: "1,184" }
+    ],
+    timeline: buildFeatureTimeline("detail", "case")
+  },
   "/case-editor": {
     featureRoute: "/case-editor",
     featureName: "case-editor",

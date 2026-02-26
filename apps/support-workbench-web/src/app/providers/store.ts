@@ -8,6 +8,7 @@ import { knowledgeAssistReducer } from "@features/knowledge-assist/knowledgeAssi
 import { phoneSessionReducer } from "@features/phone-session/phoneSessionSlice";
 import { telemetryReducer } from "@app/providers/telemetrySlice";
 import { handoffReducer } from "@app/providers/handoffSlice";
+import { ticketDetailReducer } from "@features/ticket-detail/ticketDetailSlice";
 import { ticketSearchReducer } from "@features/ticket-search/ticketSearchSlice";
 
 interface WorkbenchUiState {
@@ -42,6 +43,7 @@ export function createWorkbenchStore() {
       agentPresence: agentPresenceReducer,
       telemetry: telemetryReducer,
       handoff: handoffReducer,
+      ticketDetail: ticketDetailReducer,
       ticketSearch: ticketSearchReducer
     }
   });
