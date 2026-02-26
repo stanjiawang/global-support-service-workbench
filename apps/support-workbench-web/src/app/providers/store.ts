@@ -17,6 +17,7 @@ import { ticketDetailReducer } from "@features/ticket-detail/ticketDetailSlice";
 import { ticketSearchReducer } from "@features/ticket-search/ticketSearchSlice";
 import { ticketWorkspaceReducer } from "@features/ticket-workspace/ticketWorkspaceSlice";
 import { workflowAutomationReducer } from "@features/workflow-automation/workflowAutomationSlice";
+import { reportingDashboardsReducer } from "@features/reporting-dashboards/reportingDashboardsSlice";
 
 interface WorkbenchUiState {
   readonly activeRoute: FeatureRoute;
@@ -58,7 +59,8 @@ export function createWorkbenchStore() {
       ticketDetail: ticketDetailReducer,
       ticketSearch: ticketSearchReducer,
       ticketWorkspace: ticketWorkspaceReducer,
-      workflowAutomation: workflowAutomationReducer
+      workflowAutomation: workflowAutomationReducer,
+      reportingDashboards: reportingDashboardsReducer
     }
   });
 }

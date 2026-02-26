@@ -205,6 +205,17 @@ const FEATURE_PAYLOADS: Record<FeatureRoute, MockFeaturePayload> = {
     ],
     timeline: buildFeatureTimeline("knowledge", "chat")
   },
+  "/reporting-dashboards": {
+    featureRoute: "/reporting-dashboards",
+    featureName: "reporting-dashboards",
+    ownershipPod: "pod-workforce-ops",
+    kpis: [
+      { label: "SLA compliance", value: "97.4%" },
+      { label: "Queue health p95 lag", value: "182ms" },
+      { label: "Resolution throughput/day", value: "1,438" }
+    ],
+    timeline: buildFeatureTimeline("reporting", "case")
+  },
   "/case-editor": {
     featureRoute: "/case-editor",
     featureName: "case-editor",
