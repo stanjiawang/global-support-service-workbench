@@ -11,6 +11,7 @@ export type FeatureRoute =
   | "/customer-profile-depth"
   | "/communication-logging"
   | "/workflow-automation"
+  | "/permissions-rbac"
   | "/knowledge-assist"
   | "/agent-presence";
 
@@ -33,6 +34,7 @@ export const ROUTE_DESCRIPTORS: readonly RouteDescriptor[] = [
   { path: "/customer-profile-depth", feature: "customer-profile-depth", ownershipPod: "pod-customer-intelligence" },
   { path: "/communication-logging", feature: "communication-logging", ownershipPod: "pod-realtime-chat" },
   { path: "/workflow-automation", feature: "workflow-automation", ownershipPod: "pod-case-lifecycle" },
+  { path: "/permissions-rbac", feature: "permissions-rbac", ownershipPod: "pod-platform-governance" },
   { path: "/knowledge-assist", feature: "knowledge-assist", ownershipPod: "pod-agent-assist" },
   { path: "/agent-presence", feature: "agent-presence", ownershipPod: "pod-workforce-ops" }
 ];

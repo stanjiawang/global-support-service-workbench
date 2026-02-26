@@ -8,6 +8,7 @@ import { chatSessionReducer } from "@features/chat-session/chatSessionSlice";
 import { communicationLoggingReducer } from "@features/communication-logging/communicationLoggingSlice";
 import { customerProfileDepthReducer } from "@features/customer-profile-depth/customerProfileDepthSlice";
 import { knowledgeAssistReducer } from "@features/knowledge-assist/knowledgeAssistSlice";
+import { permissionsRbacReducer } from "@features/permissions-rbac/permissionsRbacSlice";
 import { phoneSessionReducer } from "@features/phone-session/phoneSessionSlice";
 import { telemetryReducer } from "@app/providers/telemetrySlice";
 import { handoffReducer } from "@app/providers/handoffSlice";
@@ -43,6 +44,7 @@ export function createWorkbenchStore() {
       assignmentRouting: assignmentRoutingReducer,
       customerProfileDepth: customerProfileDepthReducer,
       communicationLogging: communicationLoggingReducer,
+      permissionsRbac: permissionsRbacReducer,
       chatSession: chatSessionReducer,
       caseHistory: caseHistoryReducer,
       caseEditor: caseEditorReducer,
