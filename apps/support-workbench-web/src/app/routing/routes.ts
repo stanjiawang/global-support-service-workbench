@@ -14,6 +14,7 @@ export type FeatureRoute =
   | "/permissions-rbac"
   | "/knowledge-linkage"
   | "/reporting-dashboards"
+  | "/agent-intelligence-dashboard"
   | "/knowledge-assist"
   | "/agent-presence";
 
@@ -39,6 +40,11 @@ export const ROUTE_DESCRIPTORS: readonly RouteDescriptor[] = [
   { path: "/permissions-rbac", feature: "permissions-rbac", ownershipPod: "pod-platform-governance" },
   { path: "/knowledge-linkage", feature: "knowledge-linkage", ownershipPod: "pod-agent-assist" },
   { path: "/reporting-dashboards", feature: "reporting-dashboards", ownershipPod: "pod-workforce-ops" },
+  {
+    path: "/agent-intelligence-dashboard",
+    feature: "agent-intelligence-dashboard",
+    ownershipPod: "pod-customer-intelligence"
+  },
   { path: "/knowledge-assist", feature: "knowledge-assist", ownershipPod: "pod-agent-assist" },
   { path: "/agent-presence", feature: "agent-presence", ownershipPod: "pod-workforce-ops" }
 ];

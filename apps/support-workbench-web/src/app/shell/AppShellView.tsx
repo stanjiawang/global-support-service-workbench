@@ -4,6 +4,7 @@ import type { AppDispatch, RootState } from "@app/providers/store";
 import { setActiveRoute } from "@app/providers/store";
 import { emitTelemetry } from "@shared/telemetry/emitTelemetry";
 import { loadRoutingSnapshot } from "@features/assignment-routing/assignmentRoutingSlice";
+import { loadAgentIntelligenceDashboard } from "@features/agent-intelligence-dashboard/agentIntelligenceSlice";
 import { loadAgentPresenceSnapshot } from "@features/agent-presence/agentPresenceSlice";
 import { discardDraftChanges, loadCaseDraft } from "@features/case-editor/caseEditorSlice";
 import { loadCaseHistorySnapshot } from "@features/case-history/caseHistorySlice";
@@ -25,6 +26,11 @@ import "./app-shell.css";
 
 const Customer360Panel = lazy(() =>
   import("@features/customer-360/Customer360Panel").then((module) => ({ default: module.Customer360Panel }))
+);
+const AgentIntelligenceDashboardPanel = lazy(() =>
+  import("@features/agent-intelligence-dashboard/AgentIntelligenceDashboardPanel").then((module) => ({
+    default: module.AgentIntelligenceDashboardPanel
+  }))
 );
 const CustomerProfileDepthPanel = lazy(() =>
   import("@features/customer-profile-depth/CustomerProfileDepthPanel").then((module) => ({
@@ -132,6 +138,12 @@ export function AppShellView(): JSX.Element {
 
     if (activeRoute === "/chat-session") {
       pendingRequestsRef.current = [dispatch(loadChatSessionSnapshot())];
+      emitLoaded();
+      return;
+    }
+
+    if (activeRoute === "/agent-intelligence-dashboard") {
+      pendingRequestsRef.current = [dispatch(loadAgentIntelligenceDashboard())];
       emitLoaded();
       return;
     }
@@ -289,6 +301,8 @@ export function AppShellView(): JSX.Element {
               <ChatSessionPanel onRefresh={() => dispatch(loadChatSessionSnapshot())} />
             ) : null}
 
+            {activeRoute === "/agent-intelligence-dashboard" ? <AgentIntelligenceDashboardPanel /> : null}
+
             {activeRoute === "/assignment-routing" ? <AssignmentRoutingPanel /> : null}
 
             {activeRoute === "/customer-profile-depth" ? <CustomerProfileDepthPanel /> : null}
@@ -323,6 +337,7 @@ export function AppShellView(): JSX.Element {
 
             {activeRoute !== "/customer-360" &&
             activeRoute !== "/chat-session" &&
+            activeRoute !== "/agent-intelligence-dashboard" &&
             activeRoute !== "/assignment-routing" &&
             activeRoute !== "/customer-profile-depth" &&
             activeRoute !== "/communication-logging" &&

@@ -6,6 +6,7 @@ Provide a single escalation map for implementation, incident response, and revie
 ## Pod Ownership by Feature Path
 - `apps/support-workbench-web/src/features/` -> `@platform-foundation`
 - `apps/support-workbench-web/src/features/customer-360/` -> `@pod-customer-intelligence`
+- `apps/support-workbench-web/src/features/agent-intelligence-dashboard/` -> `@pod-customer-intelligence`
 - `apps/support-workbench-web/src/features/chat-session/` -> `@pod-realtime-chat`
 - `apps/support-workbench-web/src/features/phone-session/` -> `@pod-voice-support`
 - `apps/support-workbench-web/src/features/case-history/` -> `@pod-case-lifecycle`
