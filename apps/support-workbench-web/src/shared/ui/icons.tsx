@@ -98,29 +98,133 @@ function LinkIcon({ active = false }: IconProps): JSX.Element {
   );
 }
 
-const ROUTE_ICON_KIND: Record<FeatureRoute, "queue" | "ticket" | "phone" | "user" | "gear" | "chart" | "spark" | "doc" | "link"> = {
-  "/customer-360": "user",
-  "/chat-session": "queue",
+function GlobeIcon({ active = false }: IconProps): JSX.Element {
+  const stroke = iconColor(active);
+  return (
+    <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false" width={ICON_SIZE} height={ICON_SIZE} style={{ display: "block" }}>
+      <circle cx="10" cy="10" r="6.5" fill="none" stroke={stroke} strokeWidth="1.5" />
+      <path d="M3.8 10h12.4M10 3.5c2 2 2 11 0 13M10 3.5c-2 2-2 11 0 13" fill="none" stroke={stroke} strokeWidth="1.2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function IdCardIcon({ active = false }: IconProps): JSX.Element {
+  const stroke = iconColor(active);
+  return (
+    <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false" width={ICON_SIZE} height={ICON_SIZE} style={{ display: "block" }}>
+      <rect x="3.5" y="5" width="13" height="10" rx="2" fill="none" stroke={stroke} strokeWidth="1.4" />
+      <circle cx="8" cy="10" r="1.4" fill="none" stroke={stroke} strokeWidth="1.2" />
+      <path d="M6.2 12.3c.5-.6 1.1-.9 1.8-.9s1.3.3 1.8.9M11.8 9h2.8M11.8 11h2.2" fill="none" stroke={stroke} strokeWidth="1.2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function MessageIcon({ active = false }: IconProps): JSX.Element {
+  const stroke = iconColor(active);
+  return (
+    <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false" width={ICON_SIZE} height={ICON_SIZE} style={{ display: "block" }}>
+      <path d="M4 5.5h12v7H8l-3.5 2.5V5.5z" fill="none" stroke={stroke} strokeWidth="1.4" strokeLinejoin="round" />
+      <path d="M7 8.5h6M7 10.5h4" stroke={stroke} strokeWidth="1.2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function SearchIcon({ active = false }: IconProps): JSX.Element {
+  const stroke = iconColor(active);
+  return (
+    <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false" width={ICON_SIZE} height={ICON_SIZE} style={{ display: "block" }}>
+      <circle cx="8.5" cy="8.5" r="3.8" fill="none" stroke={stroke} strokeWidth="1.5" />
+      <path d="M11.2 11.2l4 4" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function HistoryIcon({ active = false }: IconProps): JSX.Element {
+  const stroke = iconColor(active);
+  return (
+    <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false" width={ICON_SIZE} height={ICON_SIZE} style={{ display: "block" }}>
+      <path d="M4 10a6 6 0 116 6" fill="none" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M4 6v4h4M10 7.5V10l2 1.2" fill="none" stroke={stroke} strokeWidth="1.4" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function PencilIcon({ active = false }: IconProps): JSX.Element {
+  const stroke = iconColor(active);
+  return (
+    <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false" width={ICON_SIZE} height={ICON_SIZE} style={{ display: "block" }}>
+      <path d="M5 13.8l.6-2.4 6.7-6.7 1.8 1.8-6.7 6.7L5 13.8z" fill="none" stroke={stroke} strokeWidth="1.4" strokeLinejoin="round" />
+      <path d="M11.7 4.7l1.8-1.8 1.8 1.8-1.8 1.8" fill="none" stroke={stroke} strokeWidth="1.4" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function LogIcon({ active = false }: IconProps): JSX.Element {
+  const stroke = iconColor(active);
+  return (
+    <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false" width={ICON_SIZE} height={ICON_SIZE} style={{ display: "block" }}>
+      <rect x="4.5" y="3.5" width="11" height="13" rx="1.8" fill="none" stroke={stroke} strokeWidth="1.4" />
+      <path d="M7 7h6M7 10h6M7 13h4" stroke={stroke} strokeWidth="1.2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function ShieldIcon({ active = false }: IconProps): JSX.Element {
+  const stroke = iconColor(active);
+  return (
+    <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false" width={ICON_SIZE} height={ICON_SIZE} style={{ display: "block" }}>
+      <path d="M10 3.5l5 1.8v4.4c0 3.2-2 5.5-5 6.8-3-1.3-5-3.6-5-6.8V5.3L10 3.5z" fill="none" stroke={stroke} strokeWidth="1.4" strokeLinejoin="round" />
+      <path d="M8.3 9.7l1.2 1.2 2.2-2.2" fill="none" stroke={stroke} strokeWidth="1.3" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function PresenceIcon({ active = false }: IconProps): JSX.Element {
+  const stroke = iconColor(active);
+  return (
+    <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false" width={ICON_SIZE} height={ICON_SIZE} style={{ display: "block" }}>
+      <circle cx="9" cy="7" r="3" fill="none" stroke={stroke} strokeWidth="1.4" />
+      <path d="M3.8 15c1.1-1.8 2.9-2.8 5.2-2.8 1.6 0 3 .5 4.1 1.4" fill="none" stroke={stroke} strokeWidth="1.4" strokeLinecap="round" />
+      <circle cx="14.8" cy="13.8" r="2.2" fill="none" stroke={stroke} strokeWidth="1.4" />
+    </svg>
+  );
+}
+
+const ROUTE_ICON_KIND: Record<
+  FeatureRoute,
+  "queue" | "ticket" | "phone" | "user" | "gear" | "chart" | "spark" | "doc" | "link" | "globe" | "id-card" | "message" | "search" | "history" | "pencil" | "log" | "shield" | "presence"
+> = {
+  "/customer-360": "globe",
+  "/chat-session": "message",
   "/phone-session": "phone",
-  "/case-history": "doc",
-  "/case-editor": "doc",
-  "/ticket-search": "queue",
-  "/ticket-detail": "ticket",
+  "/case-history": "history",
+  "/case-editor": "pencil",
+  "/ticket-search": "search",
+  "/ticket-detail": "doc",
   "/ticket-workspace": "ticket",
-  "/assignment-routing": "gear",
-  "/customer-profile-depth": "user",
-  "/communication-logging": "doc",
+  "/assignment-routing": "queue",
+  "/customer-profile-depth": "id-card",
+  "/communication-logging": "log",
   "/workflow-automation": "gear",
-  "/permissions-rbac": "gear",
+  "/permissions-rbac": "shield",
   "/knowledge-linkage": "link",
   "/reporting-dashboards": "chart",
   "/agent-intelligence-dashboard": "spark",
-  "/knowledge-assist": "spark",
-  "/agent-presence": "user"
+  "/knowledge-assist": "user",
+  "/agent-presence": "presence"
 };
 
 export function RouteIcon({ route, active = false }: { readonly route: FeatureRoute; readonly active?: boolean }): JSX.Element {
   const kind = ROUTE_ICON_KIND[route];
+  if (kind === "globe") return <GlobeIcon active={active} />;
+  if (kind === "id-card") return <IdCardIcon active={active} />;
+  if (kind === "message") return <MessageIcon active={active} />;
+  if (kind === "search") return <SearchIcon active={active} />;
+  if (kind === "history") return <HistoryIcon active={active} />;
+  if (kind === "pencil") return <PencilIcon active={active} />;
+  if (kind === "log") return <LogIcon active={active} />;
+  if (kind === "shield") return <ShieldIcon active={active} />;
+  if (kind === "presence") return <PresenceIcon active={active} />;
   if (kind === "queue") return <QueueIcon active={active} />;
   if (kind === "ticket") return <TicketIcon active={active} />;
   if (kind === "phone") return <PhoneIcon active={active} />;
