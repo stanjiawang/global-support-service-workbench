@@ -9,6 +9,7 @@ import {
   simulateChatStaleEvent
 } from "@app/providers/simulationActions";
 import { DataTable } from "@shared/ui/DataTable";
+import { StatusBadge, statusFromValue } from "@shared/ui/components/StatusBadge";
 import { DetailList } from "@shared/ui/DetailList";
 import { selectRecentTelemetry } from "@shared/state/telemetrySelectors";
 import { emitTelemetry } from "@shared/telemetry/emitTelemetry";
@@ -25,7 +26,7 @@ export function Customer360Panel({ onRefreshAll }: Customer360PanelProps): JSX.E
   const telemetry = useSelector(selectRecentTelemetry);
 
   return (
-    <section className="feature-panel" aria-labelledby="customer-360-heading">
+    <section className="feature-panel ux-panel" aria-labelledby="customer-360-heading">
       <h2 id="customer-360-heading">customer-360</h2>
       <p>Cross-feature aggregate from chat-session and case-history slices, using shared selectors.</p>
 
@@ -48,7 +49,7 @@ export function Customer360Panel({ onRefreshAll }: Customer360PanelProps): JSX.E
       <div className="control-grid" role="group" aria-label="Event simulator controls">
         <button
           type="button"
-          className="nav-btn"
+          className="btn-success"
           onClick={() => {
             dispatch(simulateChatFreshEvent());
             emitTelemetry(dispatch, { eventName: "sim.chat.fresh", feature: "customer-360", latencyMs: 0 });
@@ -58,7 +59,7 @@ export function Customer360Panel({ onRefreshAll }: Customer360PanelProps): JSX.E
         </button>
         <button
           type="button"
-          className="nav-btn"
+          className="btn-warning"
           onClick={() => {
             dispatch(simulateChatReplayEvent());
             emitTelemetry(dispatch, { eventName: "sim.chat.replay", feature: "customer-360", latencyMs: 0 });
@@ -68,7 +69,7 @@ export function Customer360Panel({ onRefreshAll }: Customer360PanelProps): JSX.E
         </button>
         <button
           type="button"
-          className="nav-btn"
+          className="btn-danger"
           onClick={() => {
             dispatch(simulateChatStaleEvent());
             emitTelemetry(dispatch, { eventName: "sim.chat.stale", feature: "customer-360", latencyMs: 0 });
@@ -78,7 +79,7 @@ export function Customer360Panel({ onRefreshAll }: Customer360PanelProps): JSX.E
         </button>
         <button
           type="button"
-          className="nav-btn"
+          className="btn-success"
           onClick={() => {
             dispatch(simulateCaseFreshEvent());
             emitTelemetry(dispatch, { eventName: "sim.case.fresh", feature: "customer-360", latencyMs: 0 });
@@ -88,7 +89,7 @@ export function Customer360Panel({ onRefreshAll }: Customer360PanelProps): JSX.E
         </button>
         <button
           type="button"
-          className="nav-btn"
+          className="btn-warning"
           onClick={() => {
             dispatch(simulateCaseReplayEvent());
             emitTelemetry(dispatch, { eventName: "sim.case.replay", feature: "customer-360", latencyMs: 0 });
@@ -98,7 +99,7 @@ export function Customer360Panel({ onRefreshAll }: Customer360PanelProps): JSX.E
         </button>
         <button
           type="button"
-          className="nav-btn"
+          className="btn-danger"
           onClick={() => {
             dispatch(simulateCaseStaleEvent());
             emitTelemetry(dispatch, { eventName: "sim.case.stale", feature: "customer-360", latencyMs: 0 });
@@ -113,6 +114,9 @@ export function Customer360Panel({ onRefreshAll }: Customer360PanelProps): JSX.E
         rows={timeline}
         getRowKey={(row) => `${row.source}:${row.event.eventId}`}
         emptyMessage="No unified timeline events available."
+        paginate
+        pageSize={20}
+        paginationLabel="Unified timeline"
         columns={[
           { key: "source", header: "Source", render: (row) => row.source },
           { key: "event", header: "Event", render: (row) => row.event.eventId },
@@ -128,20 +132,27 @@ export function Customer360Panel({ onRefreshAll }: Customer360PanelProps): JSX.E
         rows={telemetry}
         getRowKey={(row) => `${row.recordedAt}:${row.eventName}:${row.feature}`}
         emptyMessage="No telemetry events recorded yet."
+        paginate
+        pageSize={20}
+        paginationLabel="Recent telemetry"
         columns={[
           { key: "time", header: "Recorded At", render: (row) => row.recordedAt },
           { key: "event", header: "Event", render: (row) => row.eventName },
           { key: "feature", header: "Feature", render: (row) => row.feature },
-          { key: "status", header: "Status", render: (row) => row.status },
+          {
+            key: "status",
+            header: "Status",
+            render: (row) => <StatusBadge status={statusFromValue(row.status)} ariaLabel={`Status: ${row.status}`} />
+          },
           { key: "latency", header: "Latency (ms)", render: (row) => row.latencyMs }
         ]}
       />
 
-      <p>
-        <button type="button" className="nav-btn" onClick={onRefreshAll}>
+      <div className="panel-actions">
+        <button type="button" className="btn-secondary" onClick={onRefreshAll}>
           Refresh aggregate snapshots
         </button>
-      </p>
+      </div>
     </section>
   );
 }

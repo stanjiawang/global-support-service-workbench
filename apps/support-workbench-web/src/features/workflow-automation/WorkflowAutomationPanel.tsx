@@ -20,7 +20,7 @@ export function WorkflowAutomationPanel(): JSX.Element {
   const rules = useSelector(selectWorkflowRules);
 
   return (
-    <section className="feature-panel" aria-labelledby="workflow-automation-heading">
+    <section className="feature-panel ux-panel" aria-labelledby="workflow-automation-heading">
       <h2 id="workflow-automation-heading">workflow-automation</h2>
       <p>Trigger/macro/template automation with auto-assign and escalation policy toggles.</p>
 
@@ -50,7 +50,11 @@ export function WorkflowAutomationPanel(): JSX.Element {
             key: "enabled",
             header: "Enabled",
             render: (row) => (
-              <button type="button" className="mini-btn" onClick={() => dispatch(toggleTrigger(row.triggerId))}>
+              <button
+                type="button"
+                className={row.enabled ? "btn-success btn-compact" : "btn-secondary btn-compact"}
+                onClick={() => dispatch(toggleTrigger(row.triggerId))}
+              >
                 {row.enabled ? "On" : "Off"}
               </button>
             )
@@ -94,7 +98,11 @@ export function WorkflowAutomationPanel(): JSX.Element {
             key: "enabled",
             header: "Enabled",
             render: (row) => (
-              <button type="button" className="mini-btn" onClick={() => dispatch(toggleRule(row.ruleId))}>
+              <button
+                type="button"
+                className={row.enabled ? "btn-success btn-compact" : "btn-secondary btn-compact"}
+                onClick={() => dispatch(toggleRule(row.ruleId))}
+              >
                 {row.enabled ? "On" : "Off"}
               </button>
             )

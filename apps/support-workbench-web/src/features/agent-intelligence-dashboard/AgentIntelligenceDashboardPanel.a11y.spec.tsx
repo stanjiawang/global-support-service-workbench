@@ -48,4 +48,34 @@ describe("AgentIntelligenceDashboardPanel accessibility", () => {
     expect(focusRingElements.length).toBeGreaterThan(0);
     cleanup();
   });
+
+  it("chunks dashboard content with tabs instead of a single long surface", () => {
+    const store = createWorkbenchStore();
+    store.dispatch({
+      type: loadAgentIntelligenceDashboard.fulfilled.type,
+      payload: {
+        queueTickets: [
+          {
+            ticketId: "TKT-1501",
+            customerId: "cust-201",
+            status: "open",
+            subject: "Support request",
+            createdAt: "2026-02-26T10:00:00Z",
+            updatedAt: "2026-02-26T10:00:00Z"
+          }
+        ],
+        customerPulse: null,
+        timelineEvents: [],
+        alerts: [],
+        fetchedAt: "2026-02-26T20:20:00Z"
+      }
+    });
+
+    const { container, cleanup } = renderWithStore(<AgentIntelligenceDashboardPanel />, { store });
+    const tabs = container.querySelectorAll("[role='tab']");
+    expect(tabs.length).toBe(4);
+    const tabList = container.querySelector("[role='tablist']");
+    expect(tabList).not.toBeNull();
+    cleanup();
+  });
 });

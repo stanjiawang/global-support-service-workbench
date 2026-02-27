@@ -26,11 +26,11 @@ export function CustomerIntelligence({ pulse }: CustomerIntelligenceProps): JSX.
   }
 
   return (
-    <section className="ai-glass-card space-y-3" aria-labelledby="customer-pulse-heading">
+    <section className="ai-glass-card ai-pulse-card" aria-labelledby="customer-pulse-heading">
       <h3 id="customer-pulse-heading" className="ai-heading tracking-tight antialiased">
         Customer Pulse
       </h3>
-      <div className="grid gap-2 sm:grid-cols-4">
+      <div className="ai-pulse-grid">
         <article className="ai-chip-group" aria-label={`Sentiment ${pulse.sentiment}`}>
           <p className="ai-chip-label">Sentiment</p>
           <p className="ai-chip-value">{pulse.sentiment}</p>

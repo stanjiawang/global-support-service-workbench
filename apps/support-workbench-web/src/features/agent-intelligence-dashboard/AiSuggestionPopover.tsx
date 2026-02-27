@@ -17,7 +17,7 @@ export function AiSuggestionPopover({
   onRegenerate,
   onDismiss
 }: AiSuggestionPopoverProps): JSX.Element | null {
-  const FOCUS_RING = "focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2";
+  const FOCUS_RING = "focus-visible:ring-2 focus-visible:ring-blue-500/20 focus-visible:ring-offset-2";
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {

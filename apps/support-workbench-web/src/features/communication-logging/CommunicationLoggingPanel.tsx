@@ -16,7 +16,7 @@ export function CommunicationLoggingPanel(): JSX.Element {
   const messages = useSelector(selectSelectedThreadMessages);
 
   return (
-    <section className="feature-panel" aria-labelledby="communication-logging-heading">
+    <section className="feature-panel ux-panel" aria-labelledby="communication-logging-heading">
       <h2 id="communication-logging-heading">communication-logging</h2>
       <p>Threaded communication logs across email, SMS, and chat channels.</p>
 
@@ -37,12 +37,15 @@ export function CommunicationLoggingPanel(): JSX.Element {
         rows={threads}
         getRowKey={(row) => row.threadId}
         emptyMessage="No threads."
+        paginate
+        pageSize={12}
+        paginationLabel="Communication threads"
         columns={[
           {
             key: "pick",
             header: "Select",
             render: (row) => (
-              <button type="button" className="mini-btn" onClick={() => dispatch(setSelectedThreadId(row.threadId))}>
+              <button type="button" className="btn-secondary btn-compact" onClick={() => dispatch(setSelectedThreadId(row.threadId))}>
                 Open
               </button>
             )
@@ -61,9 +64,9 @@ export function CommunicationLoggingPanel(): JSX.Element {
         rows={messages}
         getRowKey={(row) => row.messageId}
         emptyMessage="No transcript messages."
-        virtualized={messages.length > 20}
-        containerHeightPx={340}
-        rowHeightPx={40}
+        paginate
+        pageSize={15}
+        paginationLabel="Transcript messages"
         columns={[
           { key: "time", header: "Timestamp", render: (row) => row.timestamp },
           { key: "channel", header: "Channel", render: (row) => row.channel },

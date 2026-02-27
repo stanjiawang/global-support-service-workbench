@@ -27,7 +27,7 @@ export function AssignmentRoutingPanel(): JSX.Element {
   const [manualAgentId, setManualAgentId] = useState("");
 
   return (
-    <section className="feature-panel" aria-labelledby="assignment-routing-heading">
+    <section className="feature-panel ux-panel" aria-labelledby="assignment-routing-heading">
       <h2 id="assignment-routing-heading">assignment-routing</h2>
       <p>Queue operations and ownership transfer with skills-based routing fallback.</p>
 
@@ -49,7 +49,7 @@ export function AssignmentRoutingPanel(): JSX.Element {
       <h3>Queue Selection</h3>
       <div className="control-grid" role="group" aria-label="Queue controls">
         <select
-          className="text-input"
+          className="input-field"
           aria-label="Select queue"
           value={summary.selectedQueueId}
           onChange={(event) => dispatch(setSelectedQueue(event.currentTarget.value))}
@@ -62,7 +62,7 @@ export function AssignmentRoutingPanel(): JSX.Element {
         </select>
 
         <select
-          className="text-input"
+          className="input-field"
           aria-label="Select queue ticket"
           value={summary.selectedTicketId}
           onChange={(event) => dispatch(setSelectedTicketId(event.currentTarget.value))}
@@ -76,7 +76,7 @@ export function AssignmentRoutingPanel(): JSX.Element {
 
         <button
           type="button"
-          className="nav-btn"
+          className="btn-secondary"
           disabled={!summary.selectedTicketId}
           onClick={() => dispatch(routeSelectedTicketBySkills())}
         >
@@ -86,7 +86,7 @@ export function AssignmentRoutingPanel(): JSX.Element {
 
       <div className="control-grid" role="group" aria-label="Manual transfer controls">
         <select
-          className="text-input"
+          className="input-field"
           aria-label="Manual agent"
           value={manualAgentId}
           onChange={(event) => setManualAgentId(event.currentTarget.value)}
@@ -100,7 +100,7 @@ export function AssignmentRoutingPanel(): JSX.Element {
         </select>
         <button
           type="button"
-          className="nav-btn"
+          className="btn-secondary"
           disabled={!manualAgentId || !summary.selectedTicketId}
           onClick={() => dispatch(transferOwnershipToAgent({ agentId: manualAgentId, mode: "manual" }))}
         >

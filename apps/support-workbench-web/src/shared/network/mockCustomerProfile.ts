@@ -18,14 +18,14 @@ export interface MockCustomerAsset {
   assetId: string;
   type: "device" | "service" | "subscription";
   name: string;
-  status: "active" | "expired" | "trial" | "suspended";
+  status: "open" | "pending" | "closed" | "at-risk";
   renewedAt: string;
 }
 
 export interface MockCustomerOrder {
   orderId: string;
   amountUsd: number;
-  status: "fulfilled" | "pending" | "refunded";
+  status: "resolved" | "pending" | "closed";
   orderedAt: string;
 }
 
@@ -69,20 +69,20 @@ const PROFILE: MockCustomerProfile = {
     assetId: `asset-${idx + 1}`,
     type: idx % 2 === 0 ? "device" : "service",
     name: idx % 2 === 0 ? `MacBook Fleet ${idx + 1}` : `AppleCare Plan ${idx + 1}`,
-    status: idx % 3 === 0 ? "trial" : "active",
+    status: idx % 6 === 0 ? "at-risk" : idx % 3 === 0 ? "pending" : "open",
     renewedAt: `2026-02-${String(6 + idx).padStart(2, "0")}T10:00:00Z`
   })),
   orders: Array.from({ length: 12 }, (_, idx) => ({
     orderId: `order-${3000 + idx}`,
     amountUsd: 199 + idx * 42,
-    status: idx % 5 === 0 ? "refunded" : idx % 2 === 0 ? "fulfilled" : "pending",
+    status: idx % 5 === 0 ? "closed" : idx % 2 === 0 ? "resolved" : "pending",
     orderedAt: `2026-01-${String(10 + idx).padStart(2, "0")}T12:00:00Z`
   })),
   subscriptions: Array.from({ length: 4 }, (_, idx) => ({
     assetId: `sub-${idx + 1}`,
     type: "subscription",
     name: `Support Subscription ${idx + 1}`,
-    status: idx % 3 === 0 ? "trial" : "active",
+    status: idx % 3 === 0 ? "pending" : "open",
     renewedAt: `2026-03-${String(4 + idx).padStart(2, "0")}T09:00:00Z`
   })),
   interactionHistory: Array.from({ length: 24 }, (_, idx) => ({

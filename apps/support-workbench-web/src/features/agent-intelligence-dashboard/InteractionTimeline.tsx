@@ -14,7 +14,7 @@ function channelMeta(channel: TimelineChannel): { label: string; className: stri
 }
 
 export function InteractionTimeline(): JSX.Element {
-  const FOCUS_RING = "focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2";
+  const FOCUS_RING = "focus-visible:ring-2 focus-visible:ring-blue-500/20 focus-visible:ring-offset-2";
   const groups = useSelector(selectTimelineGroups);
 
   return (
