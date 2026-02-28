@@ -216,6 +216,17 @@ const FEATURE_PAYLOADS: Record<FeatureRoute, MockFeaturePayload> = {
     ],
     timeline: buildFeatureTimeline("reporting", "case")
   },
+  "/agent-intelligence-dashboard": {
+    featureRoute: "/agent-intelligence-dashboard",
+    featureName: "agent-intelligence-dashboard",
+    ownershipPod: "pod-customer-intelligence",
+    kpis: [
+      { label: "Triage decision latency", value: "1.8s" },
+      { label: "Optimistic update success", value: "94.6%" },
+      { label: "AI assist adoption", value: "67%" }
+    ],
+    timeline: buildFeatureTimeline("intelligence", "chat")
+  },
   "/case-editor": {
     featureRoute: "/case-editor",
     featureName: "case-editor",

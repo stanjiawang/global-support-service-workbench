@@ -18,7 +18,7 @@ export function PhoneSessionPanel(): JSX.Element {
   const activeHandoff = useSelector(selectActiveHandoff);
 
   return (
-    <section className="feature-panel" aria-labelledby="phone-session-heading">
+    <section className="feature-panel ux-panel" aria-labelledby="phone-session-heading">
       <h2 id="phone-session-heading">phone-session</h2>
       <p>Transport simulation with fallback chain and graceful degradation policy.</p>
 
@@ -28,7 +28,7 @@ export function PhoneSessionPanel(): JSX.Element {
           <button
             key={profile.id}
             type="button"
-            className={selectedProfileId === profile.id ? "nav-btn nav-btn-active" : "nav-btn"}
+            className={selectedProfileId === profile.id ? "btn-primary" : "btn-secondary"}
             onClick={() => {
               dispatch(setPhoneNetworkProfile(profile.id));
               dispatch(loadPhoneSessionSnapshot());
@@ -40,7 +40,7 @@ export function PhoneSessionPanel(): JSX.Element {
 
         <button
           type="button"
-          className={summary.forcePrimaryFailure ? "nav-btn nav-btn-active" : "nav-btn"}
+          className={summary.forcePrimaryFailure ? "btn-warning" : "btn-secondary"}
           onClick={() => {
             dispatch(setPhonePrimaryFailure(!summary.forcePrimaryFailure));
             dispatch(loadPhoneSessionSnapshot());
@@ -49,15 +49,15 @@ export function PhoneSessionPanel(): JSX.Element {
           {summary.forcePrimaryFailure ? "Primary failure: ON" : "Primary failure: OFF"}
         </button>
 
-        <button type="button" className="nav-btn" onClick={() => dispatch(loadPhoneSessionSnapshot())}>
+        <button type="button" className="btn-secondary" onClick={() => dispatch(loadPhoneSessionSnapshot())}>
           Refresh transport snapshot
         </button>
 
-        <button type="button" className="nav-btn" onClick={() => dispatch(acceptCurrentHandoffOnPhone())}>
+        <button type="button" className="btn-success" onClick={() => dispatch(acceptCurrentHandoffOnPhone())}>
           Accept active handoff
         </button>
 
-        <button type="button" className="nav-btn" onClick={() => dispatch(escalateCurrentHandoffToCase())}>
+        <button type="button" className="btn-warning" onClick={() => dispatch(escalateCurrentHandoffToCase())}>
           Escalate active handoff to case
         </button>
       </div>

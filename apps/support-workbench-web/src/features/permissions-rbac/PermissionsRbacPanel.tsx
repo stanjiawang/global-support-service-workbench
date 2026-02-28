@@ -9,6 +9,7 @@ import {
   selectSelectedRoleFieldAccess
 } from "@features/permissions-rbac/selectors";
 import { DataTable } from "@shared/ui/DataTable";
+import { StatusBadge, statusFromValue } from "@shared/ui/components/StatusBadge";
 import { DetailList } from "@shared/ui/DetailList";
 
 export function PermissionsRbacPanel(): JSX.Element {
@@ -20,7 +21,7 @@ export function PermissionsRbacPanel(): JSX.Element {
   const auditControls = useSelector(selectAuditControls);
 
   return (
-    <section className="feature-panel" aria-labelledby="permissions-rbac-heading">
+    <section className="feature-panel ux-panel" aria-labelledby="permissions-rbac-heading">
       <h2 id="permissions-rbac-heading">permissions-rbac</h2>
       <p>Role permissions, field-level access controls, and compliance/audit governance visibility.</p>
 
@@ -42,7 +43,7 @@ export function PermissionsRbacPanel(): JSX.Element {
       <h3>Roles</h3>
       <div className="control-grid" role="group" aria-label="Role selection">
         <select
-          className="text-input"
+          className="input-field"
           aria-label="Select role"
           value={summary.selectedRoleId === "N/A" ? "" : summary.selectedRoleId}
           onChange={(event) => dispatch(setSelectedRoleId(event.currentTarget.value))}
@@ -84,7 +85,11 @@ export function PermissionsRbacPanel(): JSX.Element {
         emptyMessage="No compliance controls."
         columns={[
           { key: "name", header: "Control", render: (row) => row.name },
-          { key: "status", header: "Status", render: (row) => row.status },
+          {
+            key: "status",
+            header: "Status",
+            render: (row) => <StatusBadge status={statusFromValue(row.status)} ariaLabel={`Status: ${row.status}`} />
+          },
           { key: "owner", header: "Owner", render: (row) => row.owner }
         ]}
       />

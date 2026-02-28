@@ -1,6 +1,7 @@
 import { configureStore, createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { FeatureRoute } from "@app/routing/routes";
 import { assignmentRoutingReducer } from "@features/assignment-routing/assignmentRoutingSlice";
+import { agentIntelligenceReducer } from "@features/agent-intelligence-dashboard/agentIntelligenceSlice";
 import { agentPresenceReducer } from "@features/agent-presence/agentPresenceSlice";
 import { caseEditorReducer } from "@features/case-editor/caseEditorSlice";
 import { caseHistoryReducer } from "@features/case-history/caseHistorySlice";
@@ -43,6 +44,7 @@ export function createWorkbenchStore() {
   return configureStore({
     reducer: {
       workbenchUi: workbenchUiSlice.reducer,
+      agentIntelligence: agentIntelligenceReducer,
       assignmentRouting: assignmentRoutingReducer,
       customerProfileDepth: customerProfileDepthReducer,
       communicationLogging: communicationLoggingReducer,

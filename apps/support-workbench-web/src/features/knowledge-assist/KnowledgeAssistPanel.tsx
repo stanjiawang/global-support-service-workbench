@@ -10,7 +10,7 @@ export function KnowledgeAssistPanel(): JSX.Element {
   const suggestions = useSelector(selectKnowledgeSuggestionViews);
 
   return (
-    <section className="feature-panel" aria-labelledby="knowledge-assist-heading">
+    <section className="feature-panel ux-panel" aria-labelledby="knowledge-assist-heading">
       <h2 id="knowledge-assist-heading">knowledge-assist</h2>
       <p>Mock suggestion workflow with accept/reject feedback loop and status tracking.</p>
 
@@ -39,10 +39,18 @@ export function KnowledgeAssistPanel(): JSX.Element {
               </div>
             </div>
             <div className="suggestion-actions">
-              <button type="button" className="nav-btn" onClick={() => dispatch(acceptSuggestion(suggestion.suggestionId))}>
+              <button
+                type="button"
+                className="btn-success"
+                onClick={() => dispatch(acceptSuggestion(suggestion.suggestionId))}
+              >
                 Accept
               </button>
-              <button type="button" className="nav-btn" onClick={() => dispatch(rejectSuggestion(suggestion.suggestionId))}>
+              <button
+                type="button"
+                className="btn-danger"
+                onClick={() => dispatch(rejectSuggestion(suggestion.suggestionId))}
+              >
                 Reject
               </button>
             </div>
@@ -50,11 +58,11 @@ export function KnowledgeAssistPanel(): JSX.Element {
         ))}
       </ul>
 
-      <p>
-        <button type="button" className="nav-btn" onClick={() => dispatch(loadKnowledgeAssistSnapshot())}>
+      <div className="panel-actions">
+        <button type="button" className="btn-secondary" onClick={() => dispatch(loadKnowledgeAssistSnapshot())}>
           Reload suggestions
         </button>
-      </p>
+      </div>
     </section>
   );
 }

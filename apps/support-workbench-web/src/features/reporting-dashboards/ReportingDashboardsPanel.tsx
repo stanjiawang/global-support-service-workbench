@@ -15,7 +15,7 @@ export function ReportingDashboardsPanel(): JSX.Element {
   const trend = useSelector(selectResolutionTrend);
 
   return (
-    <section className="feature-panel" aria-labelledby="reporting-dashboards-heading">
+    <section className="feature-panel ux-panel" aria-labelledby="reporting-dashboards-heading">
       <h2 id="reporting-dashboards-heading">reporting-dashboards</h2>
       <p>Operational analytics for queue health, SLA posture, agent productivity, and resolution trends.</p>
 
@@ -52,9 +52,9 @@ export function ReportingDashboardsPanel(): JSX.Element {
         rows={productivity}
         getRowKey={(row) => row.agentId}
         emptyMessage="No productivity metrics."
-        virtualized={productivity.length > 10}
-        containerHeightPx={320}
-        rowHeightPx={40}
+        paginate
+        pageSize={10}
+        paginationLabel="Agent productivity"
         columns={[
           { key: "agent", header: "Agent", render: (row) => row.agentId },
           { key: "resolved", header: "Resolved", render: (row) => String(row.resolvedCount) },

@@ -42,7 +42,7 @@ export function FeaturePanel({ route, onRouteRestore }: FeaturePanelProps): JSX.
   }, [route]);
 
   return (
-    <section className="feature-panel" aria-labelledby="feature-heading">
+    <section className="feature-panel ux-panel" aria-labelledby="feature-heading">
       <h2 id="feature-heading">{payload?.featureName ?? "Loading feature"}</h2>
       <p>Mock backend is active. This is the shared fallback panel for non-slice routes.</p>
 
@@ -76,11 +76,11 @@ export function FeaturePanel({ route, onRouteRestore }: FeaturePanelProps): JSX.
         </>
       ) : null}
 
-      <p>
-        <button type="button" className="nav-btn" onClick={() => onRouteRestore(route)}>
+      <div className="panel-actions">
+        <button type="button" className="btn-secondary" onClick={() => onRouteRestore(route)}>
           Refresh local state
         </button>
-      </p>
+      </div>
     </section>
   );
 }

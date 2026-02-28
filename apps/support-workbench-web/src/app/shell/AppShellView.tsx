@@ -1,9 +1,11 @@
-import { Suspense, lazy, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@app/providers/store";
 import { setActiveRoute } from "@app/providers/store";
 import { emitTelemetry } from "@shared/telemetry/emitTelemetry";
+import { emitUxEvent } from "@shared/telemetry/uxEvents";
 import { loadRoutingSnapshot } from "@features/assignment-routing/assignmentRoutingSlice";
+import { loadAgentIntelligenceDashboard } from "@features/agent-intelligence-dashboard/agentIntelligenceSlice";
 import { loadAgentPresenceSnapshot } from "@features/agent-presence/agentPresenceSlice";
 import { discardDraftChanges, loadCaseDraft } from "@features/case-editor/caseEditorSlice";
 import { loadCaseHistorySnapshot } from "@features/case-history/caseHistorySlice";
@@ -21,10 +23,17 @@ import { loadTicketWorkspaceIndex } from "@features/ticket-workspace/ticketWorks
 import { loadWorkflowAutomation } from "@features/workflow-automation/workflowAutomationSlice";
 import { ROUTE_DESCRIPTORS, type FeatureRoute } from "@app/routing/routes";
 import { routeFromHash } from "@app/routing/routeState";
-import "./app-shell.css";
+import { ContextRail } from "@shared/ui/components/ContextRail";
+import { UI_TOKENS } from "@shared/ui/tokens";
+import { RouteIcon } from "@shared/ui/icons";
 
 const Customer360Panel = lazy(() =>
   import("@features/customer-360/Customer360Panel").then((module) => ({ default: module.Customer360Panel }))
+);
+const AgentIntelligenceDashboardPanel = lazy(() =>
+  import("@features/agent-intelligence-dashboard/AgentIntelligenceDashboardPanel").then((module) => ({
+    default: module.AgentIntelligenceDashboardPanel
+  }))
 );
 const CustomerProfileDepthPanel = lazy(() =>
   import("@features/customer-profile-depth/CustomerProfileDepthPanel").then((module) => ({
@@ -90,28 +99,90 @@ const FeaturePanel = lazy(() =>
   import("@features/agent-presence/FeaturePanel").then((module) => ({ default: module.FeaturePanel }))
 );
 
+const ROUTE_MODULE_PRELOADERS: Readonly<Record<FeatureRoute, () => Promise<unknown>>> = {
+  "/customer-360": () => import("@features/customer-360/Customer360Panel"),
+  "/chat-session": () => import("@features/chat-session/ChatSessionPanel"),
+  "/phone-session": () => import("@features/phone-session/PhoneSessionPanel"),
+  "/case-history": () => import("@features/case-history/CaseHistoryPanel"),
+  "/case-editor": () => import("@features/case-editor/CaseEditorPanel"),
+  "/ticket-search": () => import("@features/ticket-search/TicketSearchPanel"),
+  "/ticket-detail": () => import("@features/ticket-detail/TicketDetailPanel"),
+  "/ticket-workspace": () => import("@features/ticket-workspace/TicketWorkspacePanel"),
+  "/assignment-routing": () => import("@features/assignment-routing/AssignmentRoutingPanel"),
+  "/customer-profile-depth": () => import("@features/customer-profile-depth/CustomerProfileDepthPanel"),
+  "/communication-logging": () => import("@features/communication-logging/CommunicationLoggingPanel"),
+  "/workflow-automation": () => import("@features/workflow-automation/WorkflowAutomationPanel"),
+  "/permissions-rbac": () => import("@features/permissions-rbac/PermissionsRbacPanel"),
+  "/knowledge-linkage": () => import("@features/knowledge-linkage/KnowledgeLinkagePanel"),
+  "/reporting-dashboards": () => import("@features/reporting-dashboards/ReportingDashboardsPanel"),
+  "/agent-intelligence-dashboard": () => import("@features/agent-intelligence-dashboard/AgentIntelligenceDashboardPanel"),
+  "/knowledge-assist": () => import("@features/knowledge-assist/KnowledgeAssistPanel"),
+  "/agent-presence": () => import("@features/agent-presence/AgentPresencePanel")
+};
+
 function titleFromRoute(route: FeatureRoute): string {
   return ROUTE_DESCRIPTORS.find((descriptor) => descriptor.path === route)?.feature ?? "unknown";
 }
+
+const UI_REVAMP_V1 = import.meta.env.VITE_UI_REVAMP_V1 !== "false";
 
 export function AppShellView(): JSX.Element {
   const dispatch = useDispatch<AppDispatch>();
   const activeRoute = useSelector((state: RootState) => state.workbenchUi.activeRoute);
   const isCaseDraftDirty = useSelector((state: RootState) => state.caseEditor.isDirty);
   const pendingRequestsRef = useRef<Array<{ abort: () => void }>>([]);
+  const preloadedRoutesRef = useRef<Set<FeatureRoute>>(new Set());
   const previousRouteRef = useRef<FeatureRoute | null>(null);
   const [pendingRoute, setPendingRoute] = useState<FeatureRoute | null>(null);
+  const [isNavCollapsed, setIsNavCollapsed] = useState(false);
   const effectivePendingRoute = isCaseDraftDirty ? pendingRoute : null;
 
   useEffect(() => {
     if (previousRouteRef.current !== activeRoute) {
-      emitTelemetry(dispatch, {
-        eventName: "route.changed",
+      emitUxEvent(dispatch, {
+        eventName: "ui.route_loaded",
         feature: activeRoute,
         latencyMs: 0
       });
       previousRouteRef.current = activeRoute;
     }
+  }, [activeRoute, dispatch]);
+
+  const prefetchRouteModule = useCallback((route: FeatureRoute): void => {
+    if (preloadedRoutesRef.current.has(route)) {
+      return;
+    }
+    preloadedRoutesRef.current.add(route);
+    void ROUTE_MODULE_PRELOADERS[route]?.();
+  }, []);
+
+  useEffect(() => {
+    const active = ROUTE_DESCRIPTORS.find((descriptor) => descriptor.path === activeRoute);
+    if (!active) {
+      return;
+    }
+
+    for (const descriptor of ROUTE_DESCRIPTORS) {
+      if (descriptor.path === activeRoute) {
+        continue;
+      }
+      if (descriptor.prefetchPriority === "high" || (descriptor.group === active.group && descriptor.prefetchPriority !== "low")) {
+        prefetchRouteModule(descriptor.path);
+      }
+    }
+  }, [activeRoute, prefetchRouteModule]);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent): void => {
+      if (event.key === "Tab") {
+        emitUxEvent(dispatch, {
+          eventName: "ui.keyboard_navigation_used",
+          feature: activeRoute
+        });
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
   }, [activeRoute, dispatch]);
 
   useEffect(() => {
@@ -132,6 +203,12 @@ export function AppShellView(): JSX.Element {
 
     if (activeRoute === "/chat-session") {
       pendingRequestsRef.current = [dispatch(loadChatSessionSnapshot())];
+      emitLoaded();
+      return;
+    }
+
+    if (activeRoute === "/agent-intelligence-dashboard") {
+      pendingRequestsRef.current = [dispatch(loadAgentIntelligenceDashboard())];
       emitLoaded();
       return;
     }
@@ -233,42 +310,129 @@ export function AppShellView(): JSX.Element {
     }
   }, [activeRoute, dispatch]);
 
-  const routeButtons = useMemo(
-    () =>
-      ROUTE_DESCRIPTORS.map((descriptor) => (
-        <button
-          key={descriptor.path}
-          type="button"
-          className={descriptor.path === activeRoute ? "nav-btn nav-btn-active" : "nav-btn"}
-          onClick={() => {
-            const blocked = activeRoute === "/case-editor" && isCaseDraftDirty && descriptor.path !== activeRoute;
-            if (blocked) {
-              setPendingRoute(descriptor.path);
-              return;
-            }
+  const routeButtons = useMemo(() => {
+    const grouped = new Map<string, typeof ROUTE_DESCRIPTORS>();
+    for (const descriptor of ROUTE_DESCRIPTORS) {
+      const current = grouped.get(descriptor.group) ?? [];
+      grouped.set(descriptor.group, [...current, descriptor]);
+    }
 
-            dispatch(setActiveRoute(descriptor.path));
-            window.location.hash = descriptor.path;
-          }}
-          aria-current={descriptor.path === activeRoute ? "page" : undefined}
-        >
-          {descriptor.feature}
-        </button>
-      )),
-    [activeRoute, dispatch, isCaseDraftDirty]
-  );
+    return Array.from(grouped.entries()).map(([groupName, descriptors]) => (
+      <section key={groupName} className="ux-nav-group" aria-label={groupName}>
+        <h2 className="ux-nav-group-title">{groupName}</h2>
+        {descriptors.map((descriptor) => (
+          <button
+            key={descriptor.path}
+            type="button"
+            className={descriptor.path === activeRoute ? "btn-primary" : "btn-secondary"}
+            onClick={() => {
+              const blocked = activeRoute === "/case-editor" && isCaseDraftDirty && descriptor.path !== activeRoute;
+              if (blocked) {
+                setPendingRoute(descriptor.path);
+                return;
+              }
+
+              dispatch(setActiveRoute(descriptor.path));
+              window.location.hash = descriptor.path;
+              emitUxEvent(dispatch, {
+                eventName: "ui.primary_action_clicked",
+                feature: descriptor.path
+              });
+            }}
+            onMouseEnter={() => prefetchRouteModule(descriptor.path)}
+            onFocus={() => prefetchRouteModule(descriptor.path)}
+            aria-current={descriptor.path === activeRoute ? "page" : undefined}
+            aria-label={descriptor.feature}
+          >
+            <span className="ux-nav-item-row ux-inline-icon-text">
+              <span className="ux-nav-icon-wrap icon-slot">
+                <RouteIcon route={descriptor.path} active={descriptor.path === activeRoute} />
+              </span>
+              <span className="ux-nav-label-wrap">
+                <span>{descriptor.feature}</span>
+                {UI_REVAMP_V1 ? <small className="ux-nav-intent">{descriptor.intent}</small> : null}
+              </span>
+            </span>
+          </button>
+        ))}
+      </section>
+    ));
+  }, [activeRoute, dispatch, isCaseDraftDirty, prefetchRouteModule]);
+
+  const activeDescriptor = ROUTE_DESCRIPTORS.find((descriptor) => descriptor.path === activeRoute);
 
   return (
-    <div className="shell-root">
-      <header className="shell-header">
-        <h1>Global Support & Service Workbench</h1>
-        <p>Route: {titleFromRoute(activeRoute)}</p>
+    <div className={UI_REVAMP_V1 ? UI_TOKENS.shell.root : "shell-root"}>
+      <header className={UI_REVAMP_V1 ? UI_TOKENS.shell.header : "shell-header"}>
+        <div className="ux-header-top">
+          <div>
+            <h1 className="tracking-tight antialiased">Global Support & Service Workbench</h1>
+            <p className="ai-subtle">Route: {titleFromRoute(activeRoute)}</p>
+          </div>
+          <div className="inline-actions">
+            <button
+              type="button"
+              className={`btn-primary ${UI_TOKENS.interactive.ring}`}
+              onClick={() => {
+                dispatch(setActiveRoute("/ticket-search"));
+                window.location.hash = "/ticket-search";
+                emitUxEvent(dispatch, {
+                  eventName: "ui.primary_action_clicked",
+                  feature: "/ticket-search"
+                });
+              }}
+            >
+              Quick action: Search ticket
+            </button>
+            <button
+              type="button"
+              className={`btn-secondary ${UI_TOKENS.interactive.ring}`}
+              onClick={() => {
+                dispatch(setActiveRoute("/ticket-detail"));
+                window.location.hash = "/ticket-detail";
+                emitUxEvent(dispatch, {
+                  eventName: "ui.primary_action_clicked",
+                  feature: "/ticket-detail"
+                });
+              }}
+            >
+              Jump to case
+            </button>
+          </div>
+        </div>
+        {UI_REVAMP_V1 ? (
+          <ContextRail
+            title="Current Work Context"
+            status="ready"
+            items={[
+              { label: "Active route", value: activeDescriptor?.path ?? activeRoute },
+              { label: "Workflow group", value: activeDescriptor?.group ?? "unknown" },
+              { label: "Primary action", value: activeDescriptor?.primaryAction.label ?? "none" },
+              { label: "Prefetch priority", value: activeDescriptor?.prefetchPriority ?? "low" }
+            ]}
+          />
+        ) : null}
       </header>
-      <div className="shell-body">
-        <nav aria-label="Feature navigation" className="shell-nav">
+      <div className={isNavCollapsed ? "shell-body shell-body-nav-collapsed" : "shell-body"}>
+        <nav
+          aria-label="Feature navigation"
+          className={
+            UI_REVAMP_V1
+              ? `${UI_TOKENS.shell.nav} ${isNavCollapsed ? "shell-nav-collapsed" : ""}`
+              : `shell-nav ${isNavCollapsed ? "shell-nav-collapsed" : ""}`
+          }
+        >
+          <button
+            type="button"
+            className="btn-secondary shell-nav-collapse-toggle"
+            aria-label={isNavCollapsed ? "Expand navigation" : "Collapse navigation"}
+            onClick={() => setIsNavCollapsed((value) => !value)}
+          >
+            {isNavCollapsed ? "»" : "«"} <span className="shell-nav-collapse-label">Navigation</span>
+          </button>
           {routeButtons}
         </nav>
-        <main className="shell-main" aria-live="polite">
+        <main className={UI_REVAMP_V1 ? UI_TOKENS.shell.content : "shell-main"} aria-live="polite">
           <Suspense fallback={<p>Loading feature module...</p>}>
             {activeRoute === "/customer-360" ? (
               <Customer360Panel
@@ -288,6 +452,8 @@ export function AppShellView(): JSX.Element {
             {activeRoute === "/chat-session" ? (
               <ChatSessionPanel onRefresh={() => dispatch(loadChatSessionSnapshot())} />
             ) : null}
+
+            {activeRoute === "/agent-intelligence-dashboard" ? <AgentIntelligenceDashboardPanel /> : null}
 
             {activeRoute === "/assignment-routing" ? <AssignmentRoutingPanel /> : null}
 
@@ -323,6 +489,7 @@ export function AppShellView(): JSX.Element {
 
             {activeRoute !== "/customer-360" &&
             activeRoute !== "/chat-session" &&
+            activeRoute !== "/agent-intelligence-dashboard" &&
             activeRoute !== "/assignment-routing" &&
             activeRoute !== "/customer-profile-depth" &&
             activeRoute !== "/communication-logging" &&
@@ -354,22 +521,22 @@ export function AppShellView(): JSX.Element {
           </Suspense>
         </main>
       </div>
-      <footer className="shell-footer">
+      <footer className={UI_REVAMP_V1 ? "shell-footer shell-footer-revamp" : "shell-footer"}>
         {effectivePendingRoute ? (
-          <p>
-            You have unsaved case editor changes.{" "}
+          <div className="shell-footer-alert">
+            <span>You have unsaved case editor changes.</span>
             <button
               type="button"
-              className="nav-btn"
+              className="btn-secondary"
               onClick={() => {
                 setPendingRoute(null);
               }}
             >
               Stay on editor
-            </button>{" "}
+            </button>
             <button
               type="button"
-              className="nav-btn"
+              className="btn-secondary"
               onClick={() => {
                 if (!effectivePendingRoute) {
                   return;
@@ -383,11 +550,11 @@ export function AppShellView(): JSX.Element {
             >
               Discard and continue
             </button>
-          </p>
+          </div>
         ) : null}
         <button
           type="button"
-          className="nav-btn"
+          className="btn-secondary"
           onClick={() => {
             const hashRoute = routeFromHash(window.location.hash);
             const blocked = activeRoute === "/case-editor" && isCaseDraftDirty && hashRoute !== activeRoute;

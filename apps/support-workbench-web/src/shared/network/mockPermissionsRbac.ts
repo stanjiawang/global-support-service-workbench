@@ -14,7 +14,7 @@ export interface MockFieldAccess {
 export interface MockComplianceControl {
   controlId: string;
   name: string;
-  status: "pass" | "warning" | "fail";
+  status: "healthy" | "at-risk" | "breached";
   owner: string;
 }
 
@@ -62,9 +62,9 @@ export async function fetchMockPermissionsSnapshot(signal?: AbortSignal): Promis
       { fieldId: "f-pii", fieldName: "governmentId", roleId: "role-admin", access: "read" }
     ],
     compliance: [
-      { controlId: "cmp-1", name: "PII Redaction Coverage", status: "pass", owner: "Security Engineering" },
-      { controlId: "cmp-2", name: "Access Recertification", status: "warning", owner: "IAM Operations" },
-      { controlId: "cmp-3", name: "Audit Trail Immutability", status: "pass", owner: "Platform" }
+      { controlId: "cmp-1", name: "PII Redaction Coverage", status: "healthy", owner: "Security Engineering" },
+      { controlId: "cmp-2", name: "Access Recertification", status: "at-risk", owner: "IAM Operations" },
+      { controlId: "cmp-3", name: "Audit Trail Immutability", status: "healthy", owner: "Platform" }
     ],
     auditControls: [
       { auditId: "aud-1", eventType: "permission.changed", retentionDays: 365, piiRedaction: true },

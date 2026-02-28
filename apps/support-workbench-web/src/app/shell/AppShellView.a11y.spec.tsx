@@ -52,4 +52,21 @@ describe("AppShellView accessibility", () => {
     firstButton?.focus();
     expect(document.activeElement).toBe(firstButton);
   });
+
+  it("renders monochrome navigation icons with accessible labels", () => {
+    const { container, cleanup } = renderWithStore(<AppShellView />);
+    cleanups.push(cleanup);
+
+    const navButtons = Array.from(container.querySelectorAll("nav[aria-label='Feature navigation'] button[aria-label]"));
+    expect(navButtons.length).toBeGreaterThan(0);
+
+    const routeButtons = navButtons.filter((button) => button.getAttribute("aria-label") !== "Collapse navigation");
+    expect(routeButtons.length).toBeGreaterThan(0);
+
+    for (const button of routeButtons.slice(0, 4)) {
+      const icon = button.querySelector("svg[aria-hidden='true']");
+      expect(icon).not.toBeNull();
+      expect((button.getAttribute("aria-label") ?? "").length).toBeGreaterThan(0);
+    }
+  });
 });

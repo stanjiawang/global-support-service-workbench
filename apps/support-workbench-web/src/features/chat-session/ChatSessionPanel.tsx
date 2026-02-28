@@ -45,7 +45,7 @@ export function ChatSessionPanel({ onRefresh }: ChatSessionPanelProps): JSX.Elem
   }, [currentPage, filteredInteractions]);
 
   return (
-    <section className="feature-panel" aria-labelledby="chat-session-heading">
+    <section className="feature-panel ux-panel" aria-labelledby="chat-session-heading">
       <h2 id="chat-session-heading">chat-session</h2>
       <p>Redux slice-backed view with idempotent event ingestion and version guards.</p>
 
@@ -61,9 +61,9 @@ export function ChatSessionPanel({ onRefresh }: ChatSessionPanelProps): JSX.Elem
       />
 
       <h3>Interactions</h3>
-      <div className="control-grid" role="group" aria-label="Chat interaction search and pagination">
+      <div className="panel-actions">
         <input
-          className="text-input"
+          className="input-field ux-pagination-search"
           placeholder="Search interactions"
           value={queryInput}
           onChange={(event) => {
@@ -72,25 +72,27 @@ export function ChatSessionPanel({ onRefresh }: ChatSessionPanelProps): JSX.Elem
           }}
           aria-label="Search chat interactions"
         />
+      </div>
+      <div className="ux-table-pagination" role="group" aria-label="Chat interaction pagination controls">
         <button
           type="button"
-          className="nav-btn"
+          className="btn-secondary btn-compact"
           onClick={() => setPage((value) => Math.max(1, value - 1))}
           disabled={currentPage <= 1}
         >
           Previous page
         </button>
+        <span aria-live="polite">
+          Page {currentPage} / {interactionPageCount}
+        </span>
         <button
           type="button"
-          className="nav-btn"
+          className="btn-secondary btn-compact"
           onClick={() => setPage((value) => Math.min(interactionPageCount, value + 1))}
           disabled={currentPage >= interactionPageCount}
         >
           Next page
         </button>
-        <span>
-          Page {currentPage} / {interactionPageCount}
-        </span>
       </div>
       <DataTable
         rows={pagedInteractions}
@@ -109,9 +111,9 @@ export function ChatSessionPanel({ onRefresh }: ChatSessionPanelProps): JSX.Elem
         rows={timeline}
         getRowKey={(event) => event.eventId}
         emptyMessage="No timeline events found."
-        virtualized={timeline.length > 40}
-        containerHeightPx={320}
-        rowHeightPx={40}
+        paginate
+        pageSize={20}
+        paginationLabel="Chat timeline events"
         columns={[
           { key: "event", header: "Event", render: (row) => row.eventId },
           { key: "entity", header: "Entity", render: (row) => row.entityId },
@@ -131,19 +133,19 @@ export function ChatSessionPanel({ onRefresh }: ChatSessionPanelProps): JSX.Elem
         ]}
       />
 
-      <p>
+      <div className="panel-actions">
         <button
           type="button"
-          className="nav-btn"
+          className="btn-secondary"
           onClick={() => dispatch(startChatToPhoneHandoff())}
           disabled={interactions.length === 0}
         >
           Start handoff to phone
-        </button>{" "}
-        <button type="button" className="nav-btn" onClick={onRefresh}>
+        </button>
+        <button type="button" className="btn-secondary" onClick={onRefresh}>
           Reload chat snapshot
         </button>
-      </p>
+      </div>
     </section>
   );
 }

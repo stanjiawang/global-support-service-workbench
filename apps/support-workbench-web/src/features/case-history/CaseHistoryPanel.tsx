@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectCaseHistorySummary, selectCaseRecords, selectCaseTimeline } from "@features/case-history/selectors";
 import { DataTable } from "@shared/ui/DataTable";
+import { StatusBadge, statusFromValue } from "@shared/ui/components/StatusBadge";
 import { DetailList } from "@shared/ui/DetailList";
 import { useDebouncedValue } from "@shared/utils/useDebouncedValue";
 
@@ -40,7 +41,7 @@ export function CaseHistoryPanel({ onRefresh }: CaseHistoryPanelProps): JSX.Elem
   }, [currentPage, filteredCases]);
 
   return (
-    <section className="feature-panel" aria-labelledby="case-history-heading">
+    <section className="feature-panel ux-panel" aria-labelledby="case-history-heading">
       <h2 id="case-history-heading">case-history</h2>
       <p>Redux slice-backed case ledger with version and idempotency safeguards.</p>
 
@@ -56,9 +57,9 @@ export function CaseHistoryPanel({ onRefresh }: CaseHistoryPanelProps): JSX.Elem
       />
 
       <h3>Cases</h3>
-      <div className="control-grid" role="group" aria-label="Case search and pagination">
+      <div className="panel-actions">
         <input
-          className="text-input"
+          className="input-field ux-pagination-search"
           placeholder="Search cases"
           value={queryInput}
           onChange={(event) => {
@@ -67,25 +68,27 @@ export function CaseHistoryPanel({ onRefresh }: CaseHistoryPanelProps): JSX.Elem
           }}
           aria-label="Search cases"
         />
+      </div>
+      <div className="ux-table-pagination" role="group" aria-label="Case search pagination controls">
         <button
           type="button"
-          className="nav-btn"
+          className="btn-secondary btn-compact"
           onClick={() => setPage((value) => Math.max(1, value - 1))}
           disabled={currentPage <= 1}
         >
           Previous page
         </button>
+        <span aria-live="polite">
+          Page {currentPage} / {pageCount}
+        </span>
         <button
           type="button"
-          className="nav-btn"
+          className="btn-secondary btn-compact"
           onClick={() => setPage((value) => Math.min(pageCount, value + 1))}
           disabled={currentPage >= pageCount}
         >
           Next page
         </button>
-        <span>
-          Page {currentPage} / {pageCount}
-        </span>
       </div>
       <DataTable
         rows={pagedCases}
@@ -94,7 +97,11 @@ export function CaseHistoryPanel({ onRefresh }: CaseHistoryPanelProps): JSX.Elem
         columns={[
           { key: "case", header: "Case", render: (row) => row.caseId },
           { key: "customer", header: "Customer", render: (row) => row.customerId },
-          { key: "status", header: "Status", render: (row) => row.status },
+          {
+            key: "status",
+            header: "Status",
+            render: (row) => <StatusBadge status={statusFromValue(row.status)} ariaLabel={`Status: ${row.status}`} />
+          },
           { key: "updated", header: "Updated At", render: (row) => row.updatedAt }
         ]}
       />
@@ -104,9 +111,9 @@ export function CaseHistoryPanel({ onRefresh }: CaseHistoryPanelProps): JSX.Elem
         rows={timeline}
         getRowKey={(event) => event.eventId}
         emptyMessage="No timeline events found."
-        virtualized={timeline.length > 40}
-        containerHeightPx={320}
-        rowHeightPx={40}
+        paginate
+        pageSize={20}
+        paginationLabel="Case timeline events"
         columns={[
           { key: "event", header: "Event", render: (row) => row.eventId },
           { key: "entity", header: "Entity", render: (row) => row.entityId },
@@ -116,11 +123,11 @@ export function CaseHistoryPanel({ onRefresh }: CaseHistoryPanelProps): JSX.Elem
         ]}
       />
 
-      <p>
-        <button type="button" className="nav-btn" onClick={onRefresh}>
+      <div className="panel-actions">
+        <button type="button" className="btn-secondary" onClick={onRefresh}>
           Reload case snapshot
         </button>
-      </p>
+      </div>
     </section>
   );
 }

@@ -4,7 +4,9 @@ import { AppShellView } from "@app/shell/AppShellView";
 export function App(): JSX.Element {
   return (
     <AppProviders>
-      <AppShellView />
+      <div className="app-root">
+        <AppShellView />
+      </div>
     </AppProviders>
   );
 }

@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import { selectCustomerProfileDepth, selectCustomerProfileDepthSummary } from "@features/customer-profile-depth/selectors";
 import { DataTable } from "@shared/ui/DataTable";
+import { StatusBadge, statusFromValue } from "@shared/ui/components/StatusBadge";
 import { DetailList } from "@shared/ui/DetailList";
 
 export function CustomerProfileDepthPanel(): JSX.Element {
@@ -8,7 +9,7 @@ export function CustomerProfileDepthPanel(): JSX.Element {
   const profile = useSelector(selectCustomerProfileDepth);
 
   return (
-    <section className="feature-panel" aria-labelledby="customer-profile-depth-heading">
+    <section className="feature-panel ux-panel" aria-labelledby="customer-profile-depth-heading">
       <h2 id="customer-profile-depth-heading">customer-profile-depth</h2>
       <p>Expanded customer context: contacts, organization, assets/orders/subscriptions, and interaction history.</p>
 
@@ -63,7 +64,11 @@ export function CustomerProfileDepthPanel(): JSX.Element {
             columns={[
               { key: "asset", header: "Asset", render: (row) => row.name },
               { key: "type", header: "Type", render: (row) => row.type },
-              { key: "status", header: "Status", render: (row) => row.status },
+              {
+                key: "status",
+                header: "Status",
+                render: (row) => <StatusBadge status={statusFromValue(row.status)} ariaLabel={`Status: ${row.status}`} />
+              },
               { key: "renewed", header: "Renewed", render: (row) => row.renewedAt }
             ]}
           />
@@ -76,7 +81,11 @@ export function CustomerProfileDepthPanel(): JSX.Element {
             columns={[
               { key: "order", header: "Order", render: (row) => row.orderId },
               { key: "amount", header: "Amount USD", render: (row) => `$${row.amountUsd}` },
-              { key: "status", header: "Status", render: (row) => row.status },
+              {
+                key: "status",
+                header: "Status",
+                render: (row) => <StatusBadge status={statusFromValue(row.status)} ariaLabel={`Status: ${row.status}`} />
+              },
               { key: "ordered", header: "Ordered At", render: (row) => row.orderedAt }
             ]}
           />
@@ -88,7 +97,11 @@ export function CustomerProfileDepthPanel(): JSX.Element {
             emptyMessage="No subscriptions."
             columns={[
               { key: "sub", header: "Subscription", render: (row) => row.name },
-              { key: "status", header: "Status", render: (row) => row.status },
+              {
+                key: "status",
+                header: "Status",
+                render: (row) => <StatusBadge status={statusFromValue(row.status)} ariaLabel={`Status: ${row.status}`} />
+              },
               { key: "renewed", header: "Renewed", render: (row) => row.renewedAt }
             ]}
           />
@@ -98,9 +111,9 @@ export function CustomerProfileDepthPanel(): JSX.Element {
             rows={profile.interactionHistory}
             getRowKey={(row) => row.interactionId}
             emptyMessage="No interactions."
-            virtualized={profile.interactionHistory.length > 12}
-            containerHeightPx={320}
-            rowHeightPx={40}
+            paginate
+            pageSize={12}
+            paginationLabel="Customer interaction history"
             columns={[
               { key: "time", header: "Occurred", render: (row) => row.occurredAt },
               { key: "channel", header: "Channel", render: (row) => row.channel },

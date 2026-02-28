@@ -18,7 +18,7 @@ export function KnowledgeLinkagePanel(): JSX.Element {
   const feedback = useSelector(selectKnowledgeArticleFeedback);
 
   return (
-    <section className="feature-panel" aria-labelledby="knowledge-linkage-heading">
+    <section className="feature-panel ux-panel" aria-labelledby="knowledge-linkage-heading">
       <h2 id="knowledge-linkage-heading">knowledge-linkage</h2>
       <p>Knowledge article linkage with deflection outcomes and quality feedback loop.</p>
 
@@ -47,7 +47,7 @@ export function KnowledgeLinkagePanel(): JSX.Element {
             key: "pick",
             header: "Select",
             render: (row) => (
-              <button type="button" className="mini-btn" onClick={() => dispatch(setSelectedKnowledgeArticle(row.articleId))}>
+              <button type="button" className="btn-secondary btn-compact" onClick={() => dispatch(setSelectedKnowledgeArticle(row.articleId))}>
                 Open
               </button>
             )
